@@ -27,7 +27,7 @@ int main()
     uni.addTimeSlot(ts1);
     uni.addTimeSlot(ts2);
 
-    uni.saveState(uni, "/home/ani/Desktop/University Timetabling System/university.json");
+    uni.saveState(uni, "./university.json");
 
     University loadedUni;
     loadedUni = loadedUni.loadState("university.json");

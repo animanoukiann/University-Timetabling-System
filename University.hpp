@@ -12,7 +12,7 @@ class University
         std::vector<TimeSlot> timeSlots;
         int populationSize = 100;
         int generations = 1000;
-        double crossoverRate = 0.8;
+        double crossoverRate = 0.8;// the likelihood of performing a crossover operation
         double mutationRate = 0.1;
 
         struct Gene
