@@ -3,6 +3,26 @@
 TimeSlot::TimeSlot(std::string day, std::string startTime, std::string endTime)
 : day(day), startTime(startTime), endTime(endTime) {}
 
+std::string TimeSlot::getDay() const
+{
+    return day;
+}
+
+std::string TimeSlot::getStartTime() const
+{
+    return startTime;
+}
+
+std::string TimeSlot::getEndTime() const
+{
+    return endTime;
+}
+
+bool TimeSlot::operator==(const TimeSlot& other) const 
+{
+    return day == other.day && startTime == other.startTime && endTime == other.endTime;
+}
+
 void TimeSlot::displayInfo() const
 {
     std::cout << "TimeSlot: " << day << " from " << 

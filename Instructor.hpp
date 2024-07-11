@@ -11,6 +11,9 @@ class Instructor
         std::vector<Course> preferredCourses;
     public:
         Instructor(std::string name);
+        std::string getName() const;
+        std::vector<TimeSlot> getAvailability() const;
+        std::vector<Course> getPreferredCourses() const;
         Instructor(std::string name, std::vector<TimeSlot> availability,
         std::vector<Course> preferredCourses);
         void displayInfo() const;

@@ -45,11 +45,11 @@ int main()
     std::vector<University::Gene> schedule = uni.schedule();
     std::cout << "Best Schedule:" << std::endl;
     for (const auto& gene : schedule) {
-        std::cout << "Course: " << uni.courses[gene.courseIndex].courseName
-                  << ", TimeSlot: " << uni.timeSlots[gene.timeSlotIndex].day << " "
-                  << uni.timeSlots[gene.timeSlotIndex].startTime << "-"
-                  << uni.timeSlots[gene.timeSlotIndex].endTime
-                  << ", Instructor: " << uni.instructors[gene.instructorIndex].name << std::endl;
+        std::cout << "Course: " << uni.courses[gene.courseIndex].getCourseName()
+                  << ", TimeSlot: " << uni.timeSlots[gene.timeSlotIndex].getDay() << " "
+                  << uni.timeSlots[gene.timeSlotIndex].getStartTime() << "-"
+                  << uni.timeSlots[gene.timeSlotIndex].getEndTime()
+                  << ", Instructor: " << uni.instructors[gene.instructorIndex].getName() << std::endl;
     }
 
     return 0;

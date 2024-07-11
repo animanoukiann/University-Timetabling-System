@@ -5,7 +5,8 @@
 #include <unordered_map>
 #include "University.hpp"
 
-University::Chromosome University::createRandomChromosome() {
+University::Chromosome University::createRandomChromosome()
+{
     Chromosome chromosome;
     for (int i = 0; i < courses.size(); ++i) {
         Gene gene;
@@ -18,50 +19,53 @@ University::Chromosome University::createRandomChromosome() {
     return chromosome;
 }
 
-double University::evaluateFitness(const Chromosome& chromosome) {
+double University::evaluateFitness(const Chromosome& chromosome)
+{
     double fitness = 0.0;
     std::unordered_set<std::string> usedTimeSlots;
     std::unordered_map<int, std::unordered_set<int>> instructorAssignments;
 
-    for (const auto& gene : chromosome.genes) {
+    for (const auto& gene : chromosome.genes)
+    {
         const Course& course = courses[gene.courseIndex];
         const TimeSlot& timeSlot = timeSlots[gene.timeSlotIndex];
         const Instructor& instructor = instructors[gene.instructorIndex];
 
-        std::string timeSlotKey = timeSlot.day + timeSlot.startTime + timeSlot.endTime;
+        std::string timeSlotKey = timeSlot.getDay() + timeSlot.getStartTime()
+        + timeSlot.getEndTime();
 
-        if (usedTimeSlots.find(timeSlotKey) != usedTimeSlots.end()) {
+        if (usedTimeSlots.find(timeSlotKey) != usedTimeSlots.end())
             fitness -= 1000;
-        } else {
+        else
             usedTimeSlots.insert(timeSlotKey);
-        }
 
-        if (instructorAssignments[gene.instructorIndex].find(gene.timeSlotIndex) != instructorAssignments[gene.instructorIndex].end()) {
+        if (instructorAssignments[gene.instructorIndex].find(gene.timeSlotIndex)
+         != instructorAssignments[gene.instructorIndex].end())
             fitness -= 1000;
-        } else {
+        else
             instructorAssignments[gene.instructorIndex].insert(gene.timeSlotIndex);
-        }
 
-        if (std::find(instructor.availability.begin(), instructor.availability.end(), timeSlot) != instructor.availability.end()) {
+        if (std::find(instructor.getAvailability().begin(), 
+        instructor.getAvailability().end(), timeSlot) != instructor.getAvailability().end())
             fitness += 10;
-        }
 
-        if (std::find(instructor.preferredCourses.begin(), instructor.preferredCourses.end(), course) != instructor.preferredCourses.end()) {
+        if (std::find(instructor.getPreferredCourses().begin(),
+        instructor.getPreferredCourses().end(), course) != instructor.getPreferredCourses().end())
             fitness += 5;
-        }
     }
 
     return fitness;
 }
 
 void University::crossover(Chromosome& offspring1, Chromosome& offspring2) {
-    if ((double)rand() / RAND_MAX < crossoverRate) {
+    if (static_cast<double>(rand()) / RAND_MAX < crossoverRate) {
         int crossoverPoint = rand() % offspring1.genes.size();
-        for (int i = 0; i < crossoverPoint; ++i) {
+        for (int i = crossoverPoint; i < offspring1.genes.size(); ++i) {
             std::swap(offspring1.genes[i], offspring2.genes[i]);
         }
     }
 }
+
 
 void University::mutate(Chromosome& chromosome) {
     for (auto& gene : chromosome.genes) {
@@ -118,7 +122,7 @@ University::Chromosome University::geneticAlgorithm() {
                 return a.fitness < b.fitness;
             });
 
-        std::cout << "Generation " << gen << " Best Fitness: " << bestChromosome->fitness << std::endl;
+        //std::cout << "Generation " << gen << " Best Fitness: " << bestChromosome->fitness << std::endl;
     }
     auto bestChromosome = std::max_element(population.begin(), population.end(),
         [](const Chromosome& a, const Chromosome& b) {

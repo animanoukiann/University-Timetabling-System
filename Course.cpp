@@ -33,13 +33,28 @@ std::string Course::convert_to_json()
     return json;
 }
 
+std::string Course::getCourseName() const
+{
+    return courseName;
+}
+
+std::vector<TimeSlot> Course::getPreferredTimeSlots() const
+{
+    return preferredTimeSlots;
+}
+
+bool Course::operator==(const Course& other) const
+{
+    return courseName == other.courseName && preferredTimeSlots == other.preferredTimeSlots;
+}
+
 Course Course::reverse_from_json(std::string &json)
 {
     int name_index = json.find("courseName") + 14;
     std::string courseName = json.substr(name_index, json.find("\"", name_index) - name_index);
     std::vector<TimeSlot> preferredTimeSlots;
     int ts_start_index = json.find("preferredTimeSlots") + 20;
-    int ts_end_index = json.find("]", ts_start_index);//starting from ts_start_index find ]
+    int ts_end_index = json.find("]", ts_start_index);
     std::string ts_arr = json.substr(ts_start_index, ts_end_index - ts_start_index);
     int start = 0;
     int end = ts_arr.find("},{", start);
