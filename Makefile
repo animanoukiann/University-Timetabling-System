@@ -6,7 +6,7 @@ HEADER	=	$(wildcard *.hpp)
 
 OBJS 	=	$(patsubst %.cpp, %.o, $(SRCS))
 
-CC 			=	c++
+CC 			=	c++ -ggdb
 
 RM      = rm -fr
 

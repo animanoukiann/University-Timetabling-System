@@ -26,57 +26,64 @@ University::Chromosome University::createRandomChromosome()
     return chromosome;
 }
 
-double University::evaluateFitness(const Chromosome& chromosome)
-{
+double University::evaluateFitness(const Chromosome& chromosome) {
     double fitness = 0.0;
     std::unordered_set<std::string> usedTimeSlots;
-    //Tracks which time slots have already been assigned to
-    // courses to avoid double booking penalties.
     std::unordered_map<int, std::unordered_set<int>> instructorAssignments;
-    //Tracks which time slots have been assigned to instructors 
-    //to avoid double booking penalties    
-    for (const auto& gene : chromosome.genes)
-    {
-        if (gene.courseIndex < 0 || gene.courseIndex >= courses.size())
-        {
+
+    for (const auto& gene : chromosome.genes) {
+        if (gene.courseIndex < 0 || gene.courseIndex >= courses.size()) {
             std::cerr << "Error: Gene has invalid course index." << std::endl;
             continue;
         }
-        if (gene.timeSlotIndex < 0 || gene.timeSlotIndex >= timeSlots.size())
-        {
+        if (gene.timeSlotIndex < 0 || gene.timeSlotIndex >= timeSlots.size()) {
             std::cerr << "Error: Gene has invalid time slot index." << std::endl;
             continue;
         }
-        if (gene.instructorIndex < 0 || gene.instructorIndex >= instructors.size())
-        {
+        if (gene.instructorIndex < 0 || gene.instructorIndex >= instructors.size()) {
             std::cerr << "Error: Gene has invalid instructor index." << std::endl;
             continue;
         }
+        
         const Course& course = courses[gene.courseIndex];
         const TimeSlot& timeSlot = timeSlots[gene.timeSlotIndex];
         const Instructor& instructor = instructors[gene.instructorIndex];
 
-        std::string timeSlotKey = timeSlot.getDay() + timeSlot.getStartTime()
-        + timeSlot.getEndTime();//Checks if the timeSlot has already been used 
+        std::string timeSlotKey = timeSlot.getDay() + timeSlot.getStartTime() + timeSlot.getEndTime();
 
-        if (usedTimeSlots.find(timeSlotKey) != usedTimeSlots.end())
-            fitness -= 1000;//time slot has already been assigned so decrease its fitness score
-        else
-            usedTimeSlots.insert(timeSlotKey);
-
-        if (instructorAssignments[gene.instructorIndex].find(gene.timeSlotIndex)
-         != instructorAssignments[gene.instructorIndex].end())
+        // Check for used time slots
+        if (usedTimeSlots.find(timeSlotKey) != usedTimeSlots.end()) {
             fitness -= 1000;
-        else
+        } else {
+            usedTimeSlots.insert(timeSlotKey);
+        }
+
+        // Check for instructor assignments
+        if (instructorAssignments[gene.instructorIndex].find(gene.timeSlotIndex) != instructorAssignments[gene.instructorIndex].end()) {
+            fitness -= 1000;
+        } else {
             instructorAssignments[gene.instructorIndex].insert(gene.timeSlotIndex);
+        }
 
-        if (std::find(instructor.getAvailability().begin(), 
-        instructor.getAvailability().end(), timeSlot) != instructor.getAvailability().end())
-            fitness += 10;
+        // Safeguard for empty or invalid availability
+        auto availability = instructor.getAvailability();
+        if (!availability.empty()) {
+            if (std::find(availability.begin(), availability.end(), timeSlot) != availability.end()) {
+                fitness += 10;
+            }
+        } else {
+            std::cerr << "Warning: Instructor " << instructor.getName() << " has no availability data." << std::endl;
+        }
 
-        if (std::find(instructor.getPreferredCourses().begin(),
-        instructor.getPreferredCourses().end(), course) != instructor.getPreferredCourses().end())
-            fitness += 5;
+        // Safeguard for empty or invalid preferred courses
+        auto preferredCourses = instructor.getPreferredCourses();
+        if (!preferredCourses.empty()) {
+            if (std::find(preferredCourses.begin(), preferredCourses.end(), course) != preferredCourses.end()) {
+                fitness += 5;
+            }
+        } else {
+            std::cerr << "Warning: Instructor " << instructor.getName() << " has no preferred courses data." << std::endl;
+        }
     }
 
     return fitness;
@@ -184,7 +191,7 @@ University::Chromosome University::geneticAlgorithm() {
                 return a.fitness < b.fitness;
             });
 
-        std::cout << "Generation " << gen << " Best Fitness: " << bestChromosome->fitness << std::endl;
+        //std::cout << "Generation " << gen << " Best Fitness: " << bestChromosome->fitness << std::endl;
     }
     auto bestChromosome = std::max_element(population.begin(), population.end(),
         [](const Chromosome& a, const Chromosome& b) {
