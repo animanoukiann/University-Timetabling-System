@@ -27,10 +27,10 @@ int main()
     uni.addTimeSlot(ts1);
     uni.addTimeSlot(ts2);
 
-    uni.saveState(uni, "./university.json");
+    uni.saveState(uni, "./result.json");
 
     University loadedUni;
-    loadedUni = loadedUni.loadState("university.json");
+    loadedUni = loadedUni.loadState("./result.json");
 
     std::cout << "Loaded Courses:" << std::endl;
     for (const auto &course : loadedUni.courses) {
