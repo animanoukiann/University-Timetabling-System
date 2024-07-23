@@ -7,8 +7,11 @@ project(UniversityTimetable)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb")
+
 #Include directories
 include_directories(include)
+include_directories(argparse)
 
 #Source files for the library
 set(SRC

@@ -1,31 +1,93 @@
 #include "University.hpp"
+#include "../argparse/argparse.h"
 
-int main() 
+using namespace argparse;
+
+std::vector<std::string> splitStringBySpace(const std::string& str)
 {
-    TimeSlot ts1("Monday", "10:45", "12:20");
-    TimeSlot ts2("Thursday", "14:35", "16:10");
-    std::vector<TimeSlot> timeSlots { ts1, ts2 };
+    std::vector<std::string> result;
+    std::istringstream iss(str);
+    std::string word;
+    while (iss >> word) {
+        result.push_back(word);
+    }
+    return result;
+}
 
-    Course course1("Introduction to Computer Science", timeSlots);
-    Course course2("MathPhys Equations", {ts2});
+int main(int argc, const char **argv)
+{
+    ArgumentParser parser("UniversityTimetable", "University Timetable System");
 
-    
-    Instructor instructor("Dr. Alice Brown");
-    instructor.setAvailability(ts1);
-    instructor.setPreferredCourses(course1);
-    
+    parser.add_argument("--addInstructor", "addInstructor")
+        .count(3)
+        .description("Adds a new instructor by their name, preferred course and timeslot")
+        .required(false);
 
-    Instructor instructor1("John Doe");
-    instructor1.setAvailability(ts2);
-    instructor1.setPreferredCourses(course2);
+    parser.add_argument("--addCourse", "addCourse")
+        .count(2)
+        .description("Adds a new course by its name and preferred time")
+        .required(false);
+
+    parser.add_argument("--addTimeslot", "addTimeslot")
+        .count(3)
+        .description("Adds a new timeslot by its day, start time and end time")
+        .required(false);
+
+    parser.add_argument()
+        .name("--schedule")
+        .description("Generate schedule")
+        .required(false);
+
+    parser.enable_help();
+    auto err = parser.parse(argc, argv);
+    if (err)
+    {
+        std::cout << err << std::endl;
+        return (-1);
+    }
+
+    if (parser.exists("help"))
+    {
+        parser.print_help();
+        return (0);
+    }
 
     University uni;
-    uni.addCourse(course1);
-    uni.addCourse(course2);
-    uni.addInstructor(instructor1);
-    uni.addInstructor(instructor);
-    uni.addTimeSlot(ts1);
-    uni.addTimeSlot(ts2);
+
+    if (parser.exists("addInstructor"))
+    {
+        //here are some parts that can cause a seg fault if you give input improper way
+        //so it must have 3 arguments and be careful with the 2nd argumet 
+        //example` --addInstructor "John B" "Thursday 14:35 16:10" "MathPhys Eq"
+        std::vector<std::string> inst_info = parser.get<std::vector<std::string>>("addInstructor");
+        std::vector<std::string> time = splitStringBySpace(inst_info[1]);
+        TimeSlot ts(time[0], time[1], time[2]);
+        Course course(inst_info[2]);
+        Instructor instructor(inst_info[0]);
+        instructor.setAvailability(ts);
+        instructor.setPreferredCourses(course);
+        uni.addInstructor(instructor);
+    }
+
+    if (parser.exists("addCourse"))
+    {
+        //the same here
+        //example --addCourse "Relational Databases" "Saturday 9:00 10:45"
+        std::vector<std::string> course_info = parser.get<std::vector<std::string>>("addCourse");
+        std::vector<std::string> time_1 = splitStringBySpace(course_info[1]);
+        TimeSlot ts1(time_1[0], time_1[1], time_1[2]);
+        Course course(course_info[0], {ts1});
+        uni.addCourse(course);
+    }
+
+    if (parser.exists("addTimeslot"))
+    {
+        //the same here
+        //example --addTimeslot "Monday" "12:50" "14:25"
+        std::vector<std::string> time_info = parser.get<std::vector<std::string>>("addTimeslot");
+        TimeSlot ts2(time_info[0], time_info[1], time_info[2]);
+        uni.addTimeSlot(ts2);
+    }
 
     uni.saveState(uni, "./result.json");
 
@@ -42,15 +104,17 @@ int main()
         instructor.displayInfo();
     }
 
-    std::vector<University::Gene> schedule = uni.schedule();
-    std::cout << "Best Schedule:" << std::endl;
-    for (const auto& gene : schedule) {
-        std::cout << "Course: " << uni.courses[gene.courseIndex].getCourseName()
-                  << ", TimeSlot: " << uni.timeSlots[gene.timeSlotIndex].getDay() << " "
-                  << uni.timeSlots[gene.timeSlotIndex].getStartTime() << "-"
-                  << uni.timeSlots[gene.timeSlotIndex].getEndTime()
-                  << ", Instructor: " << uni.instructors[gene.instructorIndex].getName() << std::endl;
+    if (parser.exists("--schedule"))
+    {
+        std::vector<University::Gene> schedule = uni.schedule();
+        std::cout << "Best Schedule:" << std::endl;
+        for (const auto& gene : schedule) {
+            std::cout << "Course: " << uni.courses[gene.courseIndex].getCourseName()
+                    << ", TimeSlot: " << uni.timeSlots[gene.timeSlotIndex].getDay() << " "
+                    << uni.timeSlots[gene.timeSlotIndex].getStartTime() << "-"
+                    << uni.timeSlots[gene.timeSlotIndex].getEndTime()
+                    << ", Instructor: " << uni.instructors[gene.instructorIndex].getName() << std::endl;
+        }
     }
-
     return 0;
 }
