@@ -50,7 +50,7 @@ int main(int argc, const char **argv)
         return (0);
     }
 
-    University uni;
+    University RAU;
 
     if (parser.exists("addInstructor"))
     {
@@ -62,14 +62,16 @@ int main(int argc, const char **argv)
             {
                 Course course(inst_info[1]);
                 instructor.setPreferredCourses(course);
+                RAU.addCourse(course);
             }
             if (inst_info.size() == 3)
             {
                 std::vector<std::string> time = splitStringBySpace(inst_info[2]);
                 TimeSlot ts(time[0], time[1], time[2]);
                 instructor.setAvailability(ts);
+                RAU.addTimeSlot(ts);
             }
-            uni.addInstructor(instructor);
+            RAU.addInstructor(instructor);
         }
         else
         {
@@ -84,14 +86,14 @@ int main(int argc, const char **argv)
         if (course_info.size() == 1)
         {
             Course course1(course_info[0]);
-            uni.addCourse(course1);
+            RAU.addCourse(course1);
         }
         else if(course_info.size() == 2)
         {
             std::vector<std::string> time_1 = splitStringBySpace(course_info[1]);
             TimeSlot ts1(time_1[0], time_1[1], time_1[2]);
             Course course(course_info[0], {ts1});
-            uni.addCourse(course);
+            RAU.addCourse(course);
         }
         else
         {
@@ -104,24 +106,34 @@ int main(int argc, const char **argv)
     {
         std::vector<std::string> time_info = parser.get<std::vector<std::string>>("addTimeslot");
         TimeSlot ts2(time_info[0], time_info[1], time_info[2]);
-        uni.addTimeSlot(ts2);
+        RAU.addTimeSlot(ts2);
     }
 
-    uni.saveState(uni, "./result.json");
+    RAU.saveState(RAU, "./result.json");
+    RAU.loadState("./result.json");
 
-    University loadedUni;
-    loadedUni = loadedUni.loadState("./result.json");
+    std::cout << "Loaded Time:" << std::endl;
+    for (const auto &time : RAU.timeSlots)
+        time.displayInfo();
+
+    std::cout << "Loaded Courses:" << std::endl;
+    for (const auto &course : RAU.courses)
+        course.displayInfo();
+
+    std::cout << "Loaded Instructors:" << std::endl;
+    for (const auto &instructor : RAU.instructors)
+        instructor.displayInfo();
 
     if (parser.exists("--schedule"))
     {
-        std::vector<University::Gene> schedule = uni.schedule();
+        std::vector<University::Gene> schedule = RAU.schedule();
         std::cout << "Best Schedule:" << std::endl;
         for (const auto& gene : schedule) {
-            std::cout << "Course: " << uni.courses[gene.courseIndex].getCourseName()
-                    << ", TimeSlot: " << uni.timeSlots[gene.timeSlotIndex].getDay() << " "
-                    << uni.timeSlots[gene.timeSlotIndex].getStartTime() << "-"
-                    << uni.timeSlots[gene.timeSlotIndex].getEndTime()
-                    << ", Instructor: " << uni.instructors[gene.instructorIndex].getName() << std::endl;
+            std::cout << "Course: " << RAU.courses[gene.courseIndex].getCourseName()
+                  << ", TimeSlot: " << RAU.timeSlots[gene.timeSlotIndex].getDay() << " "
+                  << RAU.timeSlots[gene.timeSlotIndex].getStartTime() << "-"
+                  << RAU.timeSlots[gene.timeSlotIndex].getEndTime()
+                  << ", Instructor: " << RAU.instructors[gene.instructorIndex].getName() << std::endl;
         }
     }
     return 0;
