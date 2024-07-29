@@ -109,8 +109,8 @@ int main(int argc, const char **argv)
         RAU.addTimeSlot(ts2);
     }
 
-    RAU.saveState(RAU, "./result.json");
-    RAU.loadState("./result.json");
+    RAU.saveState(RAU, "../result/result.json");
+    RAU.loadState("../result/result.json");
 
     std::cout << "Loaded Time:" << std::endl;
     for (const auto &time : RAU.timeSlots)
