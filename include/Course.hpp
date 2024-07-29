@@ -4,8 +4,7 @@
 #include <vector>
 #include "TimeSlot.hpp"
 
-class Course
-{
+class Course {
     private:
         std::string courseName;
         std::vector<TimeSlot> preferredTimeSlots;

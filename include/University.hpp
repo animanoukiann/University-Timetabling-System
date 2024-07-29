@@ -4,8 +4,7 @@
 #include "Instructor.hpp"
 #include <sstream>
 
-class University
-{
+class University {
     public:
         std::vector<Course> courses;
         std::vector<Instructor> instructors;
@@ -15,15 +14,13 @@ class University
         double crossoverRate = 0.8;// the likelihood of performing a crossover operation
         double mutationRate = 0.1;
 
-        struct Gene
-        {
+        struct Gene {
             int courseIndex;
             int timeSlotIndex;
             int instructorIndex;
         };
 
-        struct Chromosome
-        {
+        struct Chromosome {
             std::vector<Gene> genes;
             double fitness;
         };
