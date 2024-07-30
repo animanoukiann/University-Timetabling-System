@@ -99,16 +99,19 @@ int main(int argc, const char **argv) {
     RAU.loadState("../result/result.json");
 
     std::cout << "Loaded Time:" << std::endl;
-    for (const auto &time : RAU.timeSlots)
+    for (const auto &time : RAU.timeSlots) {
         time.displayInfo();
+    }
 
     std::cout << "Loaded Courses:" << std::endl;
-    for (const auto &course : RAU.courses)
+    for (const auto &course : RAU.courses) {
         course.displayInfo();
+    }
 
     std::cout << "Loaded Instructors:" << std::endl;
-    for (const auto &instructor : RAU.instructors)
+    for (const auto &instructor : RAU.instructors) {
         instructor.displayInfo();
+    }
 
     if (parser.exists("--schedule")) {
         std::vector<University::Gene> schedule = RAU.schedule();

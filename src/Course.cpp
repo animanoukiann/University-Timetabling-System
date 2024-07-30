@@ -20,8 +20,9 @@ std::string Course::convert_to_json() {
     std::string json = "{\n  \"courseName\": \"" + courseName + "\",\n  \"preferredTimeSlots\": [\n";
     for (int i = 0; i < preferredTimeSlots.size(); i++) {
         json += "    " + preferredTimeSlots[i].convert_to_json();
-        if (i != preferredTimeSlots.size() - 1)
+        if (i != preferredTimeSlots.size() - 1) {
             json += ",";
+        }
         json += "\n";
     }
     json += "  ]\n}";

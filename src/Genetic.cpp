@@ -99,8 +99,9 @@ void University::crossover(Chromosome& offspring1, Chromosome& offspring2) {
             std::cerr << "Error: Crossover point out of bounds." << std::endl;
             return;
         }
-        for (int i = crossoverPoint; i < offspring1.genes.size(); i++) 
+        for (int i = crossoverPoint; i < offspring1.genes.size(); i++) {
             std::swap(offspring1.genes[i], offspring2.genes[i]);
+        }
     }
 }
 
@@ -137,10 +138,12 @@ std::vector<University::Chromosome> University::selectParents(const std::vector<
             std::cerr << "Error: Invalid parent index (parent2)." << std::endl;
             continue;
         }
-        if (population[parent1].fitness > population[parent2].fitness)
+        if (population[parent1].fitness > population[parent2].fitness) {
             parents.push_back(population[parent1]);
-        else
+        }
+        else {
             parents.push_back(population[parent2]);
+        }
     }
     return parents;
 }
@@ -148,8 +151,9 @@ std::vector<University::Chromosome> University::selectParents(const std::vector<
 University::Chromosome University::geneticAlgorithm() {
     srand(time(0));
     std::vector<Chromosome> population;
-    for (int i = 0; i < populationSize; i++)
+    for (int i = 0; i < populationSize; i++) {
         population.push_back(createRandomChromosome());
+    }
 
     for (int gen = 0; gen < generations; gen++) {
         std::vector<Chromosome> newPopulation;
@@ -166,8 +170,9 @@ University::Chromosome University::geneticAlgorithm() {
         }
 
         population = newPopulation;
-        for (auto& chromosome : population)
+        for (auto& chromosome : population) {
             chromosome.fitness = evaluateFitness(chromosome);
+        }
         auto bestChromosome = std::max_element(population.begin(), population.end(),
             [](const Chromosome& a, const Chromosome& b) {
                 return a.fitness < b.fitness;

@@ -24,7 +24,7 @@ void TimeSlot::displayInfo() const {
     startTime << " to " << endTime << std::endl;
 }
 
-std::string TimeSlot::convert_to_json() {
+std::string TimeSlot::convert_to_json() { 
     return "{\n  \"day\": \"" + day + "\",\n  \"startTime\": \""
     + startTime + "\",\n  \"endTime\": \"" + endTime + "\"\n}";
 }

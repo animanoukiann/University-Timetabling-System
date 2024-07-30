@@ -3,7 +3,7 @@
 
 #include "Course.hpp"
 
-class Instructor { 
+class Instructor {
     private:
         std::string name;
         std::vector<TimeSlot> availability;

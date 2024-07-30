@@ -8,11 +8,13 @@ preferredCourses(preferredCourses) {}
 
 void Instructor::displayInfo() const {
     std::cout << "Instructor's name: '" << name << "'\nHis/Her availability" << std::endl;
-    for (auto i = availability.begin(); i != availability.end(); i++)
+    for (auto i = availability.begin(); i != availability.end(); i++) {
         i->displayInfo();//TimeSlot's displayInfo
+    }
     std::cout << "His/Her preferred courses" << std::endl;
-    for (auto i = preferredCourses.begin(); i != preferredCourses.end(); i++)
+    for (auto i = preferredCourses.begin(); i != preferredCourses.end(); i++) {
         i->displayInfo();//Course's displayInfo
+    }
 }
 
 std::string Instructor::getName() const {
@@ -39,15 +41,17 @@ std::string Instructor::convert_to_json() {
     std::string json = "{\n  \"name\": \"" + name + "\",\n  \"availability\": [\n";
     for (int i = 0; i < availability.size(); i++) {
         json += "    " + availability[i].convert_to_json();
-        if (i != availability.size() - 1)
+        if (i != availability.size() - 1) {
             json += ",";
+        }
         json += "\n";
     }
     json += "  ],\n  \"preferredCourses\": [\n";
     for (int i = 0; i < preferredCourses.size(); i++) {
         json += "    " + preferredCourses[i].convert_to_json();
-        if (i != preferredCourses.size() - 1)
+        if (i != preferredCourses.size() - 1) {
             json += ",";
+        }
         json += "\n";
     }
     json += "  ]\n}";
