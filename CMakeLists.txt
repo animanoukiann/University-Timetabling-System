@@ -10,30 +10,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ggdb")
 
 #Include directories
-include_directories(include)
-include_directories(argparse)
+include_directories(./include)
+include_directories(./argparse)
 
 #Source files for the library
-set(SRC
-    src/Course.cpp
-    src/Genetic.cpp
-    src/Instructor.cpp
-    src/TimeSlot.cpp
-    src/University.cpp
-)
+set(SRC src/Course.cpp
+        src/Genetic.cpp
+        src/Instructor.cpp
+        src/TimeSlot.cpp
+        src/University.cpp)
 
 #Create the dynamic library
 add_library(UniversityTimetable SHARED ${SRC})
 
 #Specify where to output the library
 set_target_properties(UniversityTimetable PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynlib
-)
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynlib)
 
 #Source files for the executable
-set(TEST_SRC
-    test/main.cpp
-)
+set(TEST_SRC ./test/main.cpp)
 
 #Create the executable
 add_executable(main ${TEST_SRC})
@@ -43,5 +38,4 @@ target_link_libraries(main UniversityTimetable)
 
 #Specify where to output the executable
 set_target_properties(main PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output
-)
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
