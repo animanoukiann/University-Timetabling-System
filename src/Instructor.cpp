@@ -4,7 +4,7 @@ Instructor::Instructor(std::string name): name(name) {}
 
 Instructor::Instructor(std::string name, std::vector<TimeSlot> availability,
 std::vector<Course> preferredCourses): name(name), availability(availability),
-preferredCourses(preferredCourses) {}
+preferredCourses(preferredCourses) {} 
 
 void Instructor::displayInfo() const {
     std::cout << "Instructor's name: '" << name << "'\nHis/Her availability" << std::endl;

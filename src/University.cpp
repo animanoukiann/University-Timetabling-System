@@ -2,7 +2,7 @@
 
 void University::addCourse(Course courseName) {
     courses.push_back(courseName);
-}
+} 
 
 void University::addInstructor(Instructor name) {
     instructors.push_back(name);

@@ -5,7 +5,7 @@ TimeSlot::TimeSlot(std::string day, std::string startTime, std::string endTime)
 
 std::string TimeSlot::getDay() const {
     return day;
-}
+} 
 
 std::string TimeSlot::getStartTime() const {
     return startTime;

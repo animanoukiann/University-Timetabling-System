@@ -1,6 +1,6 @@
 #include "Course.hpp"
 
-Course::Course(std::string courseName) : courseName(courseName) {}
+Course::Course(std::string courseName) : courseName(courseName) {} 
 
 Course::Course(std::string courseName, std::vector<TimeSlot> preferredTimeSlots) : courseName(courseName), 
 preferredTimeSlots (preferredTimeSlots) {}

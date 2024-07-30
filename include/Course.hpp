@@ -2,7 +2,7 @@
 # define COURSE_HPP
 
 #include <vector>
-#include "TimeSlot.hpp"
+#include "TimeSlot.hpp" 
 
 class Course { 
     private:

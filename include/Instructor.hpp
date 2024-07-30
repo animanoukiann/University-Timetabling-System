@@ -1,7 +1,7 @@
 #ifndef INSTRUCTOR_HPP
 # define INSTRUCTOR_HPP
 
-#include "Course.hpp"
+#include "Course.hpp" 
 
 class Instructor {
     private:
