@@ -4,7 +4,7 @@
 #include "Instructor.hpp"
 #include <sstream>
 
-class University {
+class University { 
     public:
         std::vector<Course> courses;
         std::vector<Instructor> instructors;

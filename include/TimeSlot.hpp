@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-class TimeSlot {
+class TimeSlot { 
     private:
         std::string day;
         std::string startTime;
