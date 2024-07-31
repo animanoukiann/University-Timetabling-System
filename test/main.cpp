@@ -25,7 +25,6 @@ int main(int argc, const char **argv) {
         .required(false);
 
     parser.add_argument("--addTimeslot", "addTimeslot")
-        .count(3)
         .description("Adds a new timeslot by its day, start time and end time")
         .required(false);
 
@@ -66,8 +65,8 @@ int main(int argc, const char **argv) {
             RAU.addInstructor(instructor);
         }
         else {
-            std::cerr << "The max count of arguments for --addInstructor is 3!\n";
-            return (1);
+            std::cerr << "The max count of arguments for --addInstructor is 3 and the min is 1!\n";
+            return 1;
         }
     }
 
@@ -84,19 +83,24 @@ int main(int argc, const char **argv) {
             RAU.addCourse(course);
         }
         else {
-            std::cerr << "The max count of arguments for --addCourse is 2!\n";
-            return (1);
+            std::cerr << "The max count of arguments for --addCourse is 2 and the min is 1!\n";
+            return 1;
         }
     }
 
     if (parser.exists("addTimeslot")) {
         std::vector<std::string> time_info = parser.get<std::vector<std::string>>("addTimeslot");
-        TimeSlot ts2(time_info[0], time_info[1], time_info[2]);
+        if (time_info.size() != 1) {
+            std::cerr << "The count of arguments for --addTimeslot is 1!\n";
+            return 1;
+        }
+        std::vector<std::string> time_2 = splitStringBySpace(time_info[0]);
+        TimeSlot ts2(time_2[0], time_2[1], time_2[2]);
         RAU.addTimeSlot(ts2);
     }
 
-    RAU.saveState(RAU, "../result/result.json");
-    RAU.loadState("../result/result.json");
+    RAU.saveState(RAU, "/home/ani/Desktop/University-Timetabling-System/result/result.json");
+    RAU.loadState("/home/ani/Desktop/University-Timetabling-System/result/result.json");
 
     std::cout << "Loaded Time:" << std::endl;
     for (const auto &time : RAU.timeSlots) {
