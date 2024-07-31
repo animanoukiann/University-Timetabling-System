@@ -47,13 +47,26 @@ Ex.
 
 --addTimeslot
 
-for this argument you need to give three parametrs respectively day, start time and end time
+for this argument you need to give only one argument seperated by space respectively day, start time and end time
 
 Ex. 
 ```
-./output/main --addTimeslot "Monday" "12:50" "14:25"
+./output/main --addTimeslot "Monday 12:50 14:25"
 ```
 
 --scedule
 
 for this argument you don't need to give any parametrs and it's calling the scheduling algorithm for inputed data
+
+if you are not comfortable working with console there is a GUI for you here is how to work with it first of all you need to do the same things mentioned below, after that go to University-Timetabling-System/UI/backend and run this command
+
+```
+python3 app.py
+```
+after that open a new terminal and go to University-Timetabling-System/UI/frontend/university-timetable and run this command
+
+```
+npm run serve
+```
+
+now if you open your browser then go to this link http://127.0.0.1:8080/ you will see all options mentiones bellow(addCourse, addInstructor, addTimeslot, schedule) and after inputing some data into one of them you can see result.json file updated and filled with that new inputed data
