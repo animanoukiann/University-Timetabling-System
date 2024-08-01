@@ -19,7 +19,7 @@ public:
     void setAvailability(TimeSlot &timeSlot);
     void setPreferredCourses(Course &course);
     std::string convert_to_json();
-    static Instructor reverse_from_json(std::string &json);
+    static Instructor reverse_from_json(std::string &jsonString);
 };
 
 #endif

@@ -4,6 +4,9 @@
 #include <string>
 #include <iostream> 
 #include <fstream>
+#include <./nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 class TimeSlot { 
 private:
@@ -18,7 +21,7 @@ public:
     std::string getEndTime() const;
     bool operator==(const TimeSlot& other) const;
     std::string convert_to_json();
-    static TimeSlot reverse_from_json(std::string &json);
+    static TimeSlot reverse_from_json(std::string &jsonString);
 };
 
 #endif

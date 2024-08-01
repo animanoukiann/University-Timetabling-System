@@ -4,6 +4,7 @@ git clone url_of_repo
 cd University-Timetabling-System
 git checkout improvement
 git submodule update --init --recursive
+mkdir result
 ```
 
 after that you need to create a build directory

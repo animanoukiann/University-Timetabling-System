@@ -38,60 +38,37 @@ void Instructor::setPreferredCourses(Course &course) {
 }
 
 std::string Instructor::convert_to_json() {
-    std::string json = "{\n  \"name\": \"" + name + "\",\n  \"availability\": [\n";
-    for (int i = 0; i < availability.size(); i++) {
-        json += "    " + availability[i].convert_to_json();
-        if (i != availability.size() - 1) {
-            json += ",";
-        }
-        json += "\n";
+    json j;
+
+    j["name"] = name;
+    json timeSlotJson = json::array();
+    json courses = json::array();
+    for (auto& slot : availability) {
+        timeSlotJson.push_back(json::parse(slot.convert_to_json()));
     }
-    json += "  ],\n  \"preferredCourses\": [\n";
-    for (int i = 0; i < preferredCourses.size(); i++) {
-        json += "    " + preferredCourses[i].convert_to_json();
-        if (i != preferredCourses.size() - 1) {
-            json += ",";
-        }
-        json += "\n";
+    for (auto& course : preferredCourses) {
+        courses.push_back(json::parse(course.convert_to_json()));
     }
-    json += "  ]\n}";
-    return json;
+    j["availability"] = timeSlotJson;
+    j["preferredCourses"] = courses;
+    return j.dump(4);
 }
 
-Instructor Instructor::reverse_from_json(std::string &json) {
-    int name_index = json.find("\"name\": \"") + 9;
-    int name_end_index = json.find("\"", name_index);
-    std::string name = json.substr(name_index, name_end_index - name_index);
+Instructor Instructor::reverse_from_json(std::string &jsonString) {
+    json j = json::parse(jsonString);
+    
+    std::string name = j["name"];
     std::vector<TimeSlot> availability;
-    int ts_start_index = json.find("\"availability\": [") + 18;
-    int ts_end_index = json.find("]", ts_start_index);
-    std::string ts_arr = json.substr(ts_start_index, ts_end_index - ts_start_index);
-    int start = 0;
-    int end = ts_arr.find("},{", start);
-    std::string arr,arr1;
-    while (end != std::string::npos) {
-        arr = ts_arr.substr(start, end - start + 1);
-        availability.push_back(TimeSlot::reverse_from_json(arr));
-        start = end + 3;
-        end = ts_arr.find("},{", start);
-    }
-    arr = ts_arr.substr(start);
-    availability.push_back(TimeSlot::reverse_from_json(arr));
-
     std::vector<Course> preferredCourses;
-    int pc_start_index = json.find("\"preferredCourses\": [") + 21;
-    int pc_end_index = json.find("]", pc_start_index);
-    std::string pc_arr = json.substr(pc_start_index, pc_end_index - pc_start_index);
-    start = 0;
-    end = pc_arr.find("},{", start);
-    while (end != std::string::npos) {
-        arr1 = pc_arr.substr(start, end - start + 1);
-        preferredCourses.push_back(Course::reverse_from_json(arr1));
-        start = end + 3;
-        end = pc_arr.find("},{", start);
+    for (auto& tsJson : j["availability"]) {
+        std::string tsJsonString = tsJson.dump();
+        availability.push_back(TimeSlot::reverse_from_json(tsJsonString));
     }
-    arr1 = pc_arr.substr(start);
-    preferredCourses.push_back(Course::reverse_from_json(arr1));
-
+    for (auto& course : j["preferredCourses"]) {
+        std::string courseString = course.dump();
+        std::cout << courseString;
+        preferredCourses.push_back(Course::reverse_from_json(courseString));
+    }
+    
     return Instructor(name, availability, preferredCourses);
 }

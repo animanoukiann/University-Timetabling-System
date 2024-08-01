@@ -17,7 +17,7 @@ public:
     std::vector<TimeSlot> getPreferredTimeSlots() const;
     void setPreferredTimeSlot(TimeSlot &timeSlot);
     std::string convert_to_json();
-    static Course reverse_from_json(std::string &json);
+    static Course reverse_from_json(std::string &jsonString);
 };
 
 #endif
