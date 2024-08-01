@@ -8,12 +8,12 @@ preferredCourses(preferredCourses) {}
 
 void Instructor::displayInfo() const {
     std::cout << "Instructor's name: '" << name << "'\nHis/Her availability" << std::endl;
-    for (auto i = availability.begin(); i != availability.end(); i++) {
-        i->displayInfo();//TimeSlot's displayInfo
+    for (const auto& i : availability) {
+        i.displayInfo();
     }
     std::cout << "His/Her preferred courses" << std::endl;
-    for (auto i = preferredCourses.begin(); i != preferredCourses.end(); i++) {
-        i->displayInfo();//Course's displayInfo
+    for (const auto& i : preferredCourses) {
+        i.displayInfo();
     }
 }
 

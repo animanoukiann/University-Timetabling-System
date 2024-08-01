@@ -7,8 +7,8 @@ preferredTimeSlots (preferredTimeSlots) {}
 
 void Course::displayInfo() const {
     std::cout << "The course: '" << courseName << "'\nIts preferred time slots" << std::endl;
-    for (auto i = preferredTimeSlots.begin(); i != preferredTimeSlots.end(); i++) {
-        i->displayInfo();//TimeSlot's displayInfo
+    for (const auto& i : preferredTimeSlots) {
+        i.displayInfo();
     }
 }
 
