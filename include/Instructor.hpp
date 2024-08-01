@@ -10,11 +10,11 @@ private:
     std::vector<Course> preferredCourses;
 public:
     Instructor(std::string name);
+    Instructor(std::string name, std::vector<TimeSlot> availability,
+    std::vector<Course> preferredCourses);
     std::string getName() const;
     std::vector<TimeSlot> getAvailability() const;
     std::vector<Course> getPreferredCourses() const;
-    Instructor(std::string name, std::vector<TimeSlot> availability,
-    std::vector<Course> preferredCourses);
     void displayInfo() const;
     void setAvailability(TimeSlot &timeSlot);
     void setPreferredCourses(Course &course);

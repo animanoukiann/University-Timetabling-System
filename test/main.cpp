@@ -37,12 +37,12 @@ int main(int argc, const char **argv) {
     auto err = parser.parse(argc, argv);
     if (err) {
         std::cout << err << std::endl;
-        return (-1);
+        return 1;
     }
 
     if (parser.exists("help")) {
         parser.print_help();
-        return (0);
+        return 0;
     }
 
     University RAU;
