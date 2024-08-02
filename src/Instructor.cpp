@@ -37,24 +37,24 @@ void Instructor::setPreferredCourses(Course &course) {
     preferredCourses.push_back(course);
 }
 
-std::string Instructor::convert_to_json() {
+std::string Instructor::convertToJson() {
     json j;
 
     j["name"] = name;
     json timeSlotJson = json::array();
     json courses = json::array();
     for (auto& slot : availability) {
-        timeSlotJson.push_back(json::parse(slot.convert_to_json()));
+        timeSlotJson.push_back(json::parse(slot.convertToJson()));
     }
     for (auto& course : preferredCourses) {
-        courses.push_back(json::parse(course.convert_to_json()));
+        courses.push_back(json::parse(course.convertToJson()));
     }
     j["availability"] = timeSlotJson;
     j["preferredCourses"] = courses;
     return j.dump(4);
 }
 
-Instructor Instructor::reverse_from_json(std::string &jsonString) {
+Instructor Instructor::reverseFromJson(std::string &jsonString) {
     json j = json::parse(jsonString);
     
     std::string name = j["name"];
@@ -62,12 +62,12 @@ Instructor Instructor::reverse_from_json(std::string &jsonString) {
     std::vector<Course> preferredCourses;
     for (auto& tsJson : j["availability"]) {
         std::string tsJsonString = tsJson.dump();
-        availability.push_back(TimeSlot::reverse_from_json(tsJsonString));
+        availability.push_back(TimeSlot::reverseFromJson(tsJsonString));
     }
     for (auto& course : j["preferredCourses"]) {
         std::string courseString = course.dump();
         std::cout << courseString;
-        preferredCourses.push_back(Course::reverse_from_json(courseString));
+        preferredCourses.push_back(Course::reverseFromJson(courseString));
     }
     
     return Instructor(name, availability, preferredCourses);

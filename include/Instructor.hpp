@@ -18,8 +18,8 @@ public:
     void displayInfo() const;
     void setAvailability(TimeSlot &timeSlot);
     void setPreferredCourses(Course &course);
-    std::string convert_to_json();
-    static Instructor reverse_from_json(std::string &jsonString);
+    std::string convertToJson();
+    static Instructor reverseFromJson(std::string &jsonString);
 };
 
 #endif

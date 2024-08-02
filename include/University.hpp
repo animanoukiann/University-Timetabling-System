@@ -34,6 +34,7 @@ public:
 
     Chromosome createRandomChromosome();
     double evaluateFitness(const Chromosome& chromosome);
+    void evaluateFitnessHelper(const Chromosome& chromosome);
     void crossover(Chromosome& offspring1, Chromosome& offspring2);
     void mutate(Chromosome& chromosome);
     std::vector<Chromosome> selectParents(const std::vector<Chromosome>& population);

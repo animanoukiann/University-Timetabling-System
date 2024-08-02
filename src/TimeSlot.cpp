@@ -24,7 +24,7 @@ void TimeSlot::displayInfo() const {
     startTime << " to " << endTime << std::endl;
 }
 
-std::string TimeSlot::convert_to_json() { 
+std::string TimeSlot::convertToJson() { 
     json j;
 
     j["day"] = day;
@@ -34,7 +34,7 @@ std::string TimeSlot::convert_to_json() {
     return j.dump(4);
 }
 
-TimeSlot TimeSlot::reverse_from_json(std::string &jsonString) {
+TimeSlot TimeSlot::reverseFromJson(std::string &jsonString) {
     json j = json::parse(jsonString);
     std::string day = j["day"];
     std::string startTime = j["startTime"];

@@ -13,7 +13,6 @@ include_directories(./argparse)
 
 #Source files for the library
 set(SRC src/Course.cpp
-        src/Genetic.cpp
         src/Instructor.cpp
         src/TimeSlot.cpp
         src/University.cpp)

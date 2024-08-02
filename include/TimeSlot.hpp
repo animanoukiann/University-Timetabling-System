@@ -20,8 +20,8 @@ public:
     std::string getStartTime() const;
     std::string getEndTime() const;
     bool operator==(const TimeSlot& other) const;
-    std::string convert_to_json();
-    static TimeSlot reverse_from_json(std::string &jsonString);
+    std::string convertToJson();
+    static TimeSlot reverseFromJson(std::string &jsonString);
 };
 
 #endif

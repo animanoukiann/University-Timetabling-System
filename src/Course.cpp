@@ -16,13 +16,13 @@ void Course::setPreferredTimeSlot(TimeSlot &timeSlot) {
     preferredTimeSlots.push_back(timeSlot);
 }
 
-std::string Course::convert_to_json() {
+std::string Course::convertToJson() {
     json j;
 
     j["courseName"] = courseName;
     json timeSlotJson = json::array();
     for (auto& slot : preferredTimeSlots) {
-        timeSlotJson.push_back(json::parse(slot.convert_to_json()));
+        timeSlotJson.push_back(json::parse(slot.convertToJson()));
     }
     j["preferredTimeSlots"] = timeSlotJson;
     return j.dump(4);
@@ -40,14 +40,14 @@ bool Course::operator==(const Course& other) const {
     return courseName == other.courseName && preferredTimeSlots == other.preferredTimeSlots;
 }
 
-Course Course::reverse_from_json(std::string &jsonString) {
+Course Course::reverseFromJson(std::string &jsonString) {
     json j = json::parse(jsonString);
     
     std::string courseName = j["courseName"];
     std::vector<TimeSlot> preferredTimeSlots;
     for (auto& tsJson : j["preferredTimeSlots"]) {
         std::string tsJsonString = tsJson.dump();
-        preferredTimeSlots.push_back(TimeSlot::reverse_from_json(tsJsonString));
+        preferredTimeSlots.push_back(TimeSlot::reverseFromJson(tsJsonString));
     }
     
     return Course(courseName, preferredTimeSlots);
