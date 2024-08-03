@@ -98,24 +98,9 @@ int main(int argc, const char **argv) {
         TimeSlot ts2(time_2[0], time_2[1], time_2[2]);
         RAU.addTimeSlot(ts2);
     }
-
-    RAU.saveState(RAU, "/home/ani/Desktop/University-Timetabling-System/result/result.json");
-    RAU.loadState("/home/ani/Desktop/University-Timetabling-System/result/result.json");
-
-    std::cout << "Loaded Time:" << std::endl;
-    for (const auto &time : RAU.timeSlots) {
-        time.displayInfo();
-    }
-
-    std::cout << "Loaded Courses:" << std::endl;
-    for (const auto &course : RAU.courses) {
-        course.displayInfo();
-    }
-
-    std::cout << "Loaded Instructors:" << std::endl;
-    for (const auto &instructor : RAU.instructors) {
-        instructor.displayInfo();
-    }
+    
+    RAU.saveState(RAU, "../result/result.json");
+    RAU.loadState("../result/result.json");
 
     if (parser.exists("--schedule")) {
         std::vector<University::Gene> schedule = RAU.schedule();

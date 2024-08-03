@@ -2,7 +2,6 @@ To install the project clone the repo then change the branch
 ```
 git clone url_of_repo
 cd University-Timetabling-System
-git checkout improvement
 git submodule update --init --recursive
 mkdir result
 ```
@@ -58,16 +57,3 @@ Ex.
 --scedule
 
 for this argument you don't need to give any parametrs and it's calling the scheduling algorithm for inputed data
-
-if you are not comfortable working with console there is a GUI for you here is how to work with it first of all you need to do the same things mentioned below, after that go to University-Timetabling-System/UI/backend and run this command
-
-```
-python3 app.py
-```
-after that open a new terminal and go to University-Timetabling-System/UI/frontend/university-timetable and run this command
-
-```
-npm run serve
-```
-
-now if you open your browser then go to this link http://127.0.0.1:8080/ you will see all options mentiones bellow(addCourse, addInstructor, addTimeslot, schedule) and after inputing some data into one of them you can see result.json file updated and filled with that new inputed data

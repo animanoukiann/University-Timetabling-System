@@ -66,7 +66,6 @@ Instructor Instructor::reverseFromJson(std::string &jsonString) {
     }
     for (auto& course : j["preferredCourses"]) {
         std::string courseString = course.dump();
-        std::cout << courseString;
         preferredCourses.push_back(Course::reverseFromJson(courseString));
     }
     

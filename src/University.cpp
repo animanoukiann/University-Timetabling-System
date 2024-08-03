@@ -1,8 +1,3 @@
-#include <cstdlib>
-#include <ctime>
-#include <algorithm>
-#include <unordered_set>
-#include <unordered_map> 
 #include "University.hpp"
 
 void University::addCourse(Course courseName) {
@@ -63,12 +58,10 @@ University University::loadState(const std::string &file_name) {
         std::string courseJsonString = courseJson.dump();
         university.addCourse(Course::reverseFromJson(courseJsonString));
     }
-
     for (const auto& instructorJson : j["instructors"]) {
         std::string instructorJsonString = instructorJson.dump();
         university.addInstructor(Instructor::reverseFromJson(instructorJsonString));
     }
-
     for (const auto& timeSlotJson : j["timeSlots"]) {
         std::string timeSlotJsonString = timeSlotJson.dump();
         university.addTimeSlot(TimeSlot::reverseFromJson(timeSlotJsonString));
@@ -76,8 +69,6 @@ University University::loadState(const std::string &file_name) {
 
     return university;
 }
-
-
 
 University::Chromosome University::createRandomChromosome() {
     Chromosome chromosome;
@@ -97,64 +88,79 @@ University::Chromosome University::createRandomChromosome() {
     return chromosome;
 }
 
+bool University::validateGeneIndices(const Gene& gene) {
+    if (gene.courseIndex < 0 || gene.courseIndex >= courses.size()) {
+        std::cerr << "Error: Gene has invalid course index." << std::endl;
+        return false;
+    }
+    if (gene.timeSlotIndex < 0 || gene.timeSlotIndex >= timeSlots.size()) {
+        std::cerr << "Error: Gene has invalid time slot index." << std::endl;
+        return false;
+    }
+    if (gene.instructorIndex < 0 || gene.instructorIndex >= instructors.size()) {
+        std::cerr << "Error: Gene has invalid instructor index." << std::endl;
+        return false;
+    }
+    return true;
+}
+
+void University::checkUsedTimeSlots(const TimeSlot& timeSlot, std::unordered_set<std::string>& usedTimeSlots, double& fitness) {
+    std::string timeSlotKey = timeSlot.getDay() + timeSlot.getStartTime() + timeSlot.getEndTime();
+    if (usedTimeSlots.find(timeSlotKey) != usedTimeSlots.end()) {
+        fitness -= 1000;
+    } else {
+        usedTimeSlots.insert(timeSlotKey);
+    }
+}
+
+void University::checkInstructorAssignments(const Gene& gene, std::unordered_map<int, std::unordered_set<int>>& instructorAssignments, double& fitness) {
+    if (instructorAssignments[gene.instructorIndex].find(gene.timeSlotIndex) != instructorAssignments[gene.instructorIndex].end()) {
+        fitness -= 1000;
+    } else {
+        instructorAssignments[gene.instructorIndex].insert(gene.timeSlotIndex);
+    }
+}
+
+void University::checkInstructorAvailability(const Instructor& instructor, const TimeSlot& timeSlot, double& fitness) {
+    auto availability = instructor.getAvailability();
+    if (!availability.empty()) {
+        if (std::find(availability.begin(), availability.end(), timeSlot) != availability.end()) {
+            fitness += 10;
+        }
+    } else {
+        std::cerr << "Warning: Instructor " << instructor.getName() << " has no availability data." << std::endl;
+    }
+}
+
+void University::checkInstructorPreferredCourses(const Instructor& instructor, const Course& course, double& fitness) {
+    auto preferredCourses = instructor.getPreferredCourses();
+    if (!preferredCourses.empty()) {
+        if (std::find(preferredCourses.begin(), preferredCourses.end(), course) != preferredCourses.end()) {
+            fitness += 5;
+        }
+    } else {
+        std::cerr << "Warning: Instructor " << instructor.getName() << " has no preferred courses data." << std::endl;
+    }
+}
+
 double University::evaluateFitness(const Chromosome& chromosome) {
     double fitness = 0.0;
     std::unordered_set<std::string> usedTimeSlots;
     std::unordered_map<int, std::unordered_set<int>> instructorAssignments;
 
     for (const auto& gene : chromosome.genes) {
-        if (gene.courseIndex < 0 || gene.courseIndex >= courses.size()) {
-            std::cerr << "Error: Gene has invalid course index." << std::endl;
+        if (!validateGeneIndices(gene)) {
             continue;
         }
-        if (gene.timeSlotIndex < 0 || gene.timeSlotIndex >= timeSlots.size()) {
-            std::cerr << "Error: Gene has invalid time slot index." << std::endl;
-            continue;
-        }
-        if (gene.instructorIndex < 0 || gene.instructorIndex >= instructors.size()) {
-            std::cerr << "Error: Gene has invalid instructor index." << std::endl;
-            continue;
-        }
-        
+
         const Course& course = courses[gene.courseIndex];
         const TimeSlot& timeSlot = timeSlots[gene.timeSlotIndex];
         const Instructor& instructor = instructors[gene.instructorIndex];
 
-        std::string timeSlotKey = timeSlot.getDay() + timeSlot.getStartTime() + timeSlot.getEndTime();
-
-        // Check for used time slots
-        if (usedTimeSlots.find(timeSlotKey) != usedTimeSlots.end()) {
-            fitness -= 1000;
-        } else {
-            usedTimeSlots.insert(timeSlotKey);
-        }
-
-        // Check for instructor assignments
-        if (instructorAssignments[gene.instructorIndex].find(gene.timeSlotIndex) != instructorAssignments[gene.instructorIndex].end()) {
-            fitness -= 1000;
-        } else {
-            instructorAssignments[gene.instructorIndex].insert(gene.timeSlotIndex);
-        }
-
-        // Safeguard for empty or invalid availability
-        auto availability = instructor.getAvailability();
-        if (!availability.empty()) {
-            if (std::find(availability.begin(), availability.end(), timeSlot) != availability.end()) {
-                fitness += 10;
-            }
-        } else {
-            std::cerr << "Warning: Instructor " << instructor.getName() << " has no availability data." << std::endl;
-        }
-
-        // Safeguard for empty or invalid preferred courses
-        auto preferredCourses = instructor.getPreferredCourses();
-        if (!preferredCourses.empty()) {
-            if (std::find(preferredCourses.begin(), preferredCourses.end(), course) != preferredCourses.end()) {
-                fitness += 5;
-            }
-        } else {
-            std::cerr << "Warning: Instructor " << instructor.getName() << " has no preferred courses data." << std::endl;
-        }
+        checkUsedTimeSlots(timeSlot, usedTimeSlots, fitness);
+        checkInstructorAssignments(gene, instructorAssignments, fitness);
+        checkInstructorAvailability(instructor, timeSlot, fitness);
+        checkInstructorPreferredCourses(instructor, course, fitness);
     }
 
     return fitness;
