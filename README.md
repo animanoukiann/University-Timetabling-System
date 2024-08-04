@@ -57,3 +57,20 @@ Ex.
 --scedule
 
 for this argument you don't need to give any parametrs and it's calling the scheduling algorithm for inputed data
+
+if you are not comfortable working with console there is a GUI for you here is how to work with it first of all you need to do the same things mentioned above, after that go to University-Timetabling-System/UI/backend and run these commands first create a virtual environment and activate it, then install Python dependencies and run the Flask application
+
+```
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python3 app.py
+```
+after that open a new terminal and go to University-Timetabling-System/UI/frontend/university-timetable and run these commands first install Node.js dependencies then start the development server:
+
+```
+npm install
+npm run serve
+```
+
+now if you open your browser then go to this link http://127.0.0.1:8080/ you will see all options mentiones bellow(addCourse, addInstructor, addTimeslot, schedule) and after inputing some data into one of them you can see result.json file updated and filled with that new inputed data

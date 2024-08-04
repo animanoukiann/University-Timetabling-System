@@ -99,8 +99,8 @@ int main(int argc, const char **argv) {
         RAU.addTimeSlot(ts2);
     }
     
-    RAU.saveState(RAU, "../result/result.json");
-    RAU.loadState("../result/result.json");
+    RAU.saveState(RAU, "/home/ani/Desktop/University-Timetabling-System/result/result.json");
+    RAU.loadState("/home/ani/Desktop/University-Timetabling-System/result/result.json");
 
     if (parser.exists("--schedule")) {
         std::vector<University::Gene> schedule = RAU.schedule();
