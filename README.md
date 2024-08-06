@@ -54,6 +54,6 @@ Ex.
 ./output/main --addTimeslot "Monday 12:50 14:25"
 ```
 
---scedule
+--schedule
 
 for this argument you don't need to give any parametrs and it's calling the scheduling algorithm for inputed data

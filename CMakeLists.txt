@@ -8,14 +8,15 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #Include directories
-include_directories(./include)
-include_directories(./argparse)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/argparse)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/nlohmann/include)
 
 #Source files for the library
-set(SRC src/Course.cpp
-        src/Instructor.cpp
-        src/TimeSlot.cpp
-        src/University.cpp)
+set(SRC ${CMAKE_SOURCE_DIR}/src/Course.cpp
+        ${CMAKE_SOURCE_DIR}/src/Instructor.cpp
+        ${CMAKE_SOURCE_DIR}/src/TimeSlot.cpp
+        ${CMAKE_SOURCE_DIR}/src/University.cpp)
 
 #Create the dynamic library
 add_library(UniversityTimetable SHARED ${SRC})
@@ -24,7 +25,7 @@ add_library(UniversityTimetable SHARED ${SRC})
 set_target_properties(UniversityTimetable PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynlib)
 
 #Source files for the executable
-set(TEST_SRC ./test/main.cpp)
+set(TEST_SRC ${CMAKE_SOURCE_DIR}/test/main.cpp)
 
 #Create the executable
 add_executable(main ${TEST_SRC})
