@@ -1,5 +1,5 @@
 #include "University.hpp"
-#include "../third_party/argparse/argparse.h"
+#include "argparse.h"
 
 using namespace argparse;
 
@@ -98,11 +98,11 @@ int main(int argc, const char **argv) {
         TimeSlot ts2(time_2[0], time_2[1], time_2[2]);
         RAU.addTimeSlot(ts2);
     }
-    if (argc > 1 && strcmp(argv[1], "--schedule") != 0)
-    {
-        RAU.saveState(RAU, "../result.json");
-        RAU.loadState("../result.json");
-    }
+    // if (argc > 1 && strcmp(argv[1], "--schedule") != 0)
+    // {
+        RAU.saveState(RAU, "/home/ani/Desktop/University-Timetabling-System/result.json");
+        RAU.loadState("/home/ani/Desktop/University-Timetabling-System/result.json");
+    // }
 
     if (parser.exists("--schedule")) {
         std::vector<University::Gene> schedule = RAU.schedule();

@@ -25,7 +25,7 @@ add_library(UniversityTimetable SHARED ${SRC})
 set_target_properties(UniversityTimetable PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dynlib)
 
 #Source files for the executable
-set(TEST_SRC ${CMAKE_SOURCE_DIR}/test/main.cpp)
+set(TEST_SRC ${CMAKE_SOURCE_DIR}/src/main.cpp)
 
 #Create the executable
 add_executable(main ${TEST_SRC})
@@ -35,3 +35,8 @@ target_link_libraries(main UniversityTimetable)
 
 #Specify where to output the executable
 set_target_properties(main PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
+
+# Install rules
+install(TARGETS UniversityTimetable LIBRARY DESTINATION ${CMAKE_SOURCE_DIR})
+
+install(TARGETS main RUNTIME DESTINATION ${CMAKE_SOURCE_DIR})
