@@ -102,11 +102,11 @@ int main(int argc, const char **argv) {
     }
     fs::path binaryPath = fs::path(argv[0]);
     fs::path resultPath = binaryPath.parent_path()/"result.json";
-    if (argc > 1 && strcmp(argv[1], "--schedule") != 0)
-    {
-        RAU.saveState(RAU, resultPath.string());
-        RAU.loadState(resultPath.string());
-    }
+    // if (argc > 1 && strcmp(argv[1], "--schedule") != 0)
+    // {
+        RAU.saveState(RAU, "/home/ani/Desktop/University-Timetabling-System/result.json");
+        RAU.loadState("/home/ani/Desktop/University-Timetabling-System/result.json");
+    // }
 
     if (parser.exists("--schedule")) {
         std::vector<University::Gene> schedule = RAU.schedule();
