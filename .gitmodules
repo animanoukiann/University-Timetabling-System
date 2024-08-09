@@ -1,0 +1,6 @@
+[submodule "third_party/argparse"]
+	path = third_party/argparse
+	url = https://github.com/jamolnng/argparse.git
+[submodule "third_party/nlohmann"]
+	path = third_party/nlohmann
+	url = https://github.com/nlohmann/json.git
