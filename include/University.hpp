@@ -34,7 +34,7 @@ public:
     void addInstructor(Instructor name);
     void addTimeSlot(TimeSlot time);
     void saveState(University &university, const std::string &file);
-    University loadState(const std::string &file);
+    University loadState(University &university, const std::string &file);
     std::vector<Gene> schedule();
 
     Chromosome createRandomChromosome();
