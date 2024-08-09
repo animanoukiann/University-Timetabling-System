@@ -1,6 +1,8 @@
 #include "University.hpp"
-#include "../include/argparse/argparse.h"
+#include "argparse.h"
+#include <filesystem>
 
+namespace fs = std::filesystem;
 using namespace argparse;
 
 std::vector<std::string> splitStringBySpace(const std::string& str) {
@@ -98,9 +100,10 @@ int main(int argc, const char **argv) {
         TimeSlot ts2(time_2[0], time_2[1], time_2[2]);
         RAU.addTimeSlot(ts2);
     }
-    
-    RAU.saveState(RAU, "/home/ani/Desktop/University-Timetabling-System/result/result.json");
-    RAU.loadState("/home/ani/Desktop/University-Timetabling-System/result/result.json");
+    if (argc > 1 && strcmp(argv[1], "--schedule") != 0) {
+        RAU.saveState(RAU, "/home/ani/Desktop/University-Timetabling-System/result.json");
+    }
+    RAU.loadState(RAU, "/home/ani/Desktop/University-Timetabling-System/result.json");
 
     if (parser.exists("--schedule")) {
         std::vector<University::Gene> schedule = RAU.schedule();

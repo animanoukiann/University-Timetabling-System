@@ -3,7 +3,6 @@ To install the project clone the repo then change the branch
 git clone url_of_repo
 cd University-Timetabling-System
 git submodule update --init --recursive
-mkdir result
 ```
 
 after that you need to create a build directory
@@ -15,14 +14,19 @@ then generate build files with CMake
 ```
 cmake ..
 ```
-and then build the project
+then build the project
 ```
 make
 ```
-after building, the dynamic library (libUniversityTimetabling.so) and the executable (main) will be placed in the build/dynlib and build/output directories, respectively.
-to run the project, use the this command with which you can add following arguments
+and then install the project 
 ```
-./output/main
+make install
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/the/project
+```
+
+after installing, the dynamic library (libUniversityTimetabling.so) and the executable (main) will be placed in the root directory of the project, to run the project, use the this command from root directory with which you can add following arguments
+```
+./main
 ```
 
 --addInstructor
@@ -31,9 +35,9 @@ for this argument you can give one, two or three argumets respectively name of t
 
 Ex. 
 ```
-./output/main --addInstructor "John B" "Intro to ML" "Monday 12:50 14:25"
-./output/main --addInstructor "John B"
-./output/main --addInstructor "John B" "Intro to ML"
+./main --addInstructor "John B" "Intro to ML" "Monday 12:50 14:25"
+./main --addInstructor "John B"
+./main --addInstructor "John B" "Intro to ML"
 ```
 --addCourse
 
@@ -41,8 +45,8 @@ for this argument you can give one or two parametrs respectively name of the cou
 
 Ex. 
 ```
-./output/main --addCourse "Intro to ML" "Monday 12:50 14:25"
-./output/main --addCourse "Intro to ML"
+./main --addCourse "Intro to ML" "Monday 12:50 14:25"
+./main --addCourse "Intro to ML"
 ```
 
 --addTimeslot
@@ -51,10 +55,10 @@ for this argument you need to give only one argument seperated by space respecti
 
 Ex. 
 ```
-./output/main --addTimeslot "Monday 12:50 14:25"
+./main --addTimeslot "Monday 12:50 14:25"
 ```
 
---scedule
+--schedule
 
 for this argument you don't need to give any parametrs and it's calling the scheduling algorithm for inputed data
 
