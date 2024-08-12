@@ -15,23 +15,33 @@ void University::addTimeSlot(TimeSlot time) {
 void University::saveState(University &university, const std::string &file_name) {
     json j;
 
+    std::ifstream file_in(file_name);
+    if (file_in.is_open()) {
+        try {
+            file_in >> j;
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Error reading existing data: " << e.what() << std::endl;
+        }
+        file_in.close();
+    }
     json coursesJson = json::array();
     for (auto& course : university.courses) {
         coursesJson.push_back(json::parse(course.convertToJson()));
     }
-    j["courses"] = coursesJson;
+    j["courses"].insert(j["courses"].end(), coursesJson.begin(), coursesJson.end());
 
     json instructorsJson = json::array();
     for (auto& instructor : university.instructors) {
         instructorsJson.push_back(json::parse(instructor.convertToJson()));
     }
-    j["instructors"] = instructorsJson;
+    j["instructors"].insert(j["instructors"].end(), instructorsJson.begin(), instructorsJson.end());
 
     json timeSlotsJson = json::array();
     for (auto& timeSlot : university.timeSlots) {
         timeSlotsJson.push_back(json::parse(timeSlot.convertToJson()));
     }
-    j["timeSlots"] = timeSlotsJson;
+    j["timeSlots"].insert(j["timeSlots"].end(), timeSlotsJson.begin(), timeSlotsJson.end());
 
     std::ofstream file(file_name);
     if (!file) {
@@ -42,8 +52,7 @@ void University::saveState(University &university, const std::string &file_name)
     file.close();
 }
 
-University University::loadState(const std::string &file_name) {
-    University university;
+University University::loadState(University &university, const std::string &file_name) {
     std::ifstream file(file_name);
     if (!file) {
         std::cerr << "Error while opening file: " << file_name << std::endl;
