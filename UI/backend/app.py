@@ -18,15 +18,15 @@ def add_course():
     
     print(f"Received data: {data}")
 
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         if not time_slot:
             result = subprocess.run([cpp_exec_path, '--addCourse', course_name], capture_output=True, text=True)
         else:
             result = subprocess.run([cpp_exec_path, '--addCourse', course_name, time_slot], capture_output=True, text=True)
-        # print(f"Subprocess result: {result.stdout}")
-        # print(f"Subprocess error: {result.stderr}")
 
         if result.returncode == 0:
             return jsonify({'success': True, 'message': 'Course added successfully!'})
@@ -47,12 +47,12 @@ def add_time_slot():
     
     print(f"Received data: {data}")
 
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         result = subprocess.run([cpp_exec_path, '--addTimeslot', ts], capture_output=True, text=True)
-        # print(f"Subprocess result: {result.stdout}")
-        # print(f"Subprocess error: {result.stderr}")
 
         if result.returncode == 0:
             return jsonify({'success': True, 'message': 'Time slot added successfully!'})
@@ -74,7 +74,9 @@ def add_instructor():
         return jsonify({'success': False, 'message': 'Instructor is required'}), 400
     print(f"Received data: {data}")
 
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         if not course and not time:
@@ -85,8 +87,6 @@ def add_instructor():
             result = subprocess.run([cpp_exec_path, '--addInstructor', inst, course, time], capture_output=True, text=True)
         else:
             return jsonify({'success': False, 'message': 'If time is inputed course is mandatory'}), 400
-        # print(f"Subprocess result: {result.stdout}")
-        # print(f"Subprocess error: {result.stderr}")
         if result.returncode == 0:
             return jsonify({'success': True, 'message': 'Instructor added successfully!'})
         else:
@@ -97,12 +97,12 @@ def add_instructor():
 
 @app.route('/schedule', methods=['GET'])
 def schedule():
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         result = subprocess.run([cpp_exec_path, '--schedule'], capture_output=True, text=True)
-        # print(f"Subprocess result: {result.stdout}")
-        # print(f"Subprocess error: {result.stderr}")
 
         if result.returncode == 0:
             return jsonify({'success': True, 'message': 'Algorithm executed successfully!', 'output': result.stdout})
