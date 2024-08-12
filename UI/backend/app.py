@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from db_utils import connect_to_db, insert_time_slot
+from db_utils import connect_to_db, insert_time_slot, insert_course, insert_instructor
 import subprocess
 import os
 
@@ -19,17 +19,35 @@ def add_course():
     
     print(f"Received data: {data}")
 
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         if not time_slot:
             result = subprocess.run([cpp_exec_path, '--addCourse', course_name], capture_output=True, text=True)
+            if result.returncode == 0:
+                try:
+                    insert_course(course_name)
+                    return jsonify({'success': True, 'message': 'Course added successfully!'})
+                except Exception as db_error:
+                    return jsonify({'success': False, 'message': str(db_error)}), 500
+            else:
+                return jsonify({'success': False, 'message': 'Failed to add course', 'details': result.stderr}), 500
         else:
             result = subprocess.run([cpp_exec_path, '--addCourse', course_name, time_slot], capture_output=True, text=True)
-        if result.returncode == 0:
-            return jsonify({'success': True, 'message': 'Course added successfully!'})
-        else:
-            return jsonify({'success': False, 'message': 'Failed to add course', 'details': result.stderr}), 500
+            if result.returncode == 0:
+                ts_members = time_slot.split()
+                if len(ts_members) != 3:
+                    return jsonify({'success': False, 'message': 'Invalid time slot format'}), 400
+                day, start_time, end_time = ts_members
+                try:
+                    insert_course(course_name, day, start_time, end_time)
+                    return jsonify({'success': True, 'message': 'Course added successfully!'})
+                except Exception as db_error:
+                    return jsonify({'success': False, 'message': str(db_error)}), 500
+            else:
+                return jsonify({'success': False, 'message': 'Failed to add course', 'details': result.stderr}), 500
     except Exception as e:
         print(f"Exception occurred: {str(e)}")
         return jsonify({'success': False, 'message': str(e)}), 500
@@ -45,7 +63,9 @@ def add_time_slot():
     
     print(f"Received data: {data}")
 
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         result = subprocess.run([cpp_exec_path, '--addTimeslot', ts], capture_output=True, text=True)
@@ -78,28 +98,56 @@ def add_instructor():
         return jsonify({'success': False, 'message': 'Instructor is required'}), 400
     print(f"Received data: {data}")
 
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         if not course and not time:
             result = subprocess.run([cpp_exec_path, '--addInstructor', inst], capture_output=True, text=True)
+            if result.returncode == 0:
+                try:
+                    insert_instructor(inst)
+                    return jsonify({'success': True, 'message': 'Instructor added successfully!'})
+                except Exception as db_error:
+                    return jsonify({'success': False, 'message': str(db_error)}), 500
+            else:
+                return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), 500
         elif not time and course:
             result = subprocess.run([cpp_exec_path, '--addInstructor', inst, course], capture_output=True, text=True)
+            if result.returncode == 0:
+                try:
+                    insert_instructor(inst, course)
+                    return jsonify({'success': True, 'message': 'Instructor added successfully!'})
+                except Exception as db_error:
+                    return jsonify({'success': False, 'message': str(db_error)}), 500
+            else:
+                return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), 500
         elif time and course:
             result = subprocess.run([cpp_exec_path, '--addInstructor', inst, course, time], capture_output=True, text=True)
+            if result.returncode == 0:
+                ts_members = time.split()
+                if len(ts_members) != 3:
+                    return jsonify({'success': False, 'message': 'Invalid time slot format'}), 400
+                day, start_time, end_time = ts_members
+                try:
+                    insert_instructor(inst, course, day, start_time, end_time)
+                    return jsonify({'success': True, 'message': 'Instructor added successfully!'})
+                except Exception as db_error:
+                    return jsonify({'success': False, 'message': str(db_error)}), 500
+            else:
+                return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), 500
         else:
             return jsonify({'success': False, 'message': 'If time is inputed course is mandatory'}), 400
-        if result.returncode == 0:
-            return jsonify({'success': True, 'message': 'Instructor added successfully!'})
-        else:
-            return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), 500
     except Exception as e:
         print(f"Exception occurred: {str(e)}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 @app.route('/schedule', methods=['GET'])
 def schedule():
-    cpp_exec_path = os.path.join('..', '..', 'build', 'output', 'main')
+    cwd = os.getcwd()
+    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
 
     try:
         result = subprocess.run([cpp_exec_path, '--schedule'], capture_output=True, text=True)
