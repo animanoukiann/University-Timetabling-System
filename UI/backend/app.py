@@ -19,11 +19,11 @@ def add_course():
     app_dir = os.path.dirname(os.path.abspath(__file__))
     grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
-    command_args = ['bash', cpp_exec_path, '--addCourse', course_name]
+    command_args = [cpp_exec_path, '--addCourse', course_name]
     try:
         if time_slot:
             command_args.append(time_slot)
-        result = subprocess.run(command_args, capture_output=True, text=True)
+        result = subprocess.run(command_args)
         if result.returncode != 0:
             return jsonify({'success': False, 'message': 'Failed to add course', 'details': result.stderr}), requests.codes.internal_server_error
         return jsonify({'success': True, 'message': 'Course added successfully!'})
@@ -44,7 +44,7 @@ def add_time_slot():
     grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
     try:
-        result = subprocess.run(['bash', cpp_exec_path, '--addTimeslot', ts], capture_output=True, text=True)
+        result = subprocess.run([cpp_exec_path, '--addTimeslot', ts])
         if result.returncode != 0:
             return jsonify({'success': False, 'message': 'Failed to add time slot', 'details': result.stderr}), requests.codes.internal_server_error
         return jsonify({'success': True, 'message': 'Time slot added successfully!'})
@@ -65,7 +65,7 @@ def add_instructor():
     app_dir = os.path.dirname(os.path.abspath(__file__))
     grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
-    command_args = ['bash', cpp_exec_path, '--addInstructor', inst]
+    command_args = [cpp_exec_path, '--addInstructor', inst]
     try:
         if course:
             command_args.append(course)
@@ -73,7 +73,7 @@ def add_instructor():
             return jsonify({'success': False, 'message': 'If time is inputed course is mandatory'}), requests.codes.bad_request
         if time:
             command_args.append(time)
-        result = subprocess.run(command_args, capture_output=True, text=True)
+        result = subprocess.run(command_args)
         if result.returncode != 0:
             return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), requests.codes.internal_server_error
         return jsonify({'success': True, 'message': 'Instructor added successfully!'})
@@ -88,7 +88,7 @@ def schedule():
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
 
     try:
-        result = subprocess.run(['bash', cpp_exec_path, '--schedule'], capture_output=True, text=True)
+        result = subprocess.run([cpp_exec_path, '--schedule'])
         if result.returncode != 0:
             return jsonify({'success': False, 'message': 'Failed to execute algorithm', 'details': result.stderr}), requests.codes.internal_server_error
         return jsonify({'success': True, 'message': 'Algorithm executed successfully!', 'output': result.stdout})
