@@ -74,6 +74,7 @@ After that open a new terminal and go to University-Timetabling-System/UI/fronte
 
 ```
 npm install
+npm install @vue/cli-service --save-dev
 npm run serve
 ```
 
