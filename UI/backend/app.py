@@ -19,13 +19,13 @@ def add_course():
     
     print(f"Received data: {data}")
 
-    cwd = os.getcwd()
-    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
-    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+    grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
 
     try:
         if not time_slot:
-            result = subprocess.run([cpp_exec_path, '--addCourse', course_name], capture_output=True, text=True)
+            result = subprocess.run(['bash', cpp_exec_path, '--addCourse', course_name], capture_output=True, text=True)
             if result.returncode == 0:
                 try:
                     insert_course(course_name)
@@ -35,7 +35,7 @@ def add_course():
             else:
                 return jsonify({'success': False, 'message': 'Failed to add course', 'details': result.stderr}), 500
         else:
-            result = subprocess.run([cpp_exec_path, '--addCourse', course_name, time_slot], capture_output=True, text=True)
+            result = subprocess.run('bash', [cpp_exec_path, '--addCourse', course_name, time_slot], capture_output=True, text=True)
             if result.returncode == 0:
                 ts_members = time_slot.split()
                 if len(ts_members) != 3:
@@ -63,12 +63,12 @@ def add_time_slot():
     
     print(f"Received data: {data}")
 
-    cwd = os.getcwd()
-    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
-    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+    grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
 
     try:
-        result = subprocess.run([cpp_exec_path, '--addTimeslot', ts], capture_output=True, text=True)
+        result = subprocess.run(['bash', cpp_exec_path, '--addTimeslot', ts], capture_output=True, text=True)
         if result.returncode == 0:
             ts_members = ts.split()
             if len(ts_members) != 3:
@@ -98,13 +98,13 @@ def add_instructor():
         return jsonify({'success': False, 'message': 'Instructor is required'}), 400
     print(f"Received data: {data}")
 
-    cwd = os.getcwd()
-    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
-    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+    grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
 
     try:
         if not course and not time:
-            result = subprocess.run([cpp_exec_path, '--addInstructor', inst], capture_output=True, text=True)
+            result = subprocess.run(['bash', cpp_exec_path, '--addInstructor', inst], capture_output=True, text=True)
             if result.returncode == 0:
                 try:
                     insert_instructor(inst)
@@ -114,7 +114,7 @@ def add_instructor():
             else:
                 return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), 500
         elif not time and course:
-            result = subprocess.run([cpp_exec_path, '--addInstructor', inst, course], capture_output=True, text=True)
+            result = subprocess.run(['bash', cpp_exec_path, '--addInstructor', inst, course], capture_output=True, text=True)
             if result.returncode == 0:
                 try:
                     insert_instructor(inst, course)
@@ -124,7 +124,7 @@ def add_instructor():
             else:
                 return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), 500
         elif time and course:
-            result = subprocess.run([cpp_exec_path, '--addInstructor', inst, course, time], capture_output=True, text=True)
+            result = subprocess.run(['bash', cpp_exec_path, '--addInstructor', inst, course, time], capture_output=True, text=True)
             if result.returncode == 0:
                 ts_members = time.split()
                 if len(ts_members) != 3:
@@ -145,12 +145,12 @@ def add_instructor():
 
 @app.route('/schedule', methods=['GET'])
 def schedule():
-    cwd = os.getcwd()
-    grand_parent_dir = os.path.dirname(os.path.dirname(cwd))
-    cpp_exec_path = os.path.join(grand_parent_dir, 'build', 'output', 'main')
+    app_dir = os.path.dirname(os.path.abspath(__file__))
+    grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
+    cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
 
     try:
-        result = subprocess.run([cpp_exec_path, '--schedule'], capture_output=True, text=True)
+        result = subprocess.run(['bash', cpp_exec_path, '--schedule'], capture_output=True, text=True)
 
         if result.returncode == 0:
             return jsonify({'success': True, 'message': 'Algorithm executed successfully!', 'output': result.stdout})
