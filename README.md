@@ -80,23 +80,37 @@ npm run serve
 
 Now if you open your browser and follow this link http://127.0.0.1:8080/ you will see all options mentioned above(addCourse, addInstructor, addTimeslot, schedule) and after inputing some data into one of them, you can see result.json file updated and filled with the new inputed data
 
+Next we will create a database (PostgreSQL) for which we need to install it with following commands
+``` 
 chmod +x ./install.sh
 chmod +x ./setup.sh 
 sudo ./install.sh
+```
 
-after running install.sh we need to do some changes
+After running install.sh we need to do some changes in config file so follow this commands
+```
 cd /etc/postgresql/14/main
 sudo vim pg_hba.conf
-change this "local   all             postgres                                peer"
-to          "local   all             postgres                                md5"
-save it and then reload PostgreSQL to apply changes
+```
+In that file you will see
+"local   all             postgres                                peer"
+change that 'peer' into 'md5' like this
+"local   all             postgres                                md5"
+save it and then reload PostgreSQL to apply changes with this command
+```
 sudo systemctl reload postgresql
 sudo -i -u postgres psql
 psql
+```
+After that change the password for postgres user
+```
 ALTER USER postgres PASSWORD 'pwd123';
 \q
 exit
-
+```
+Now as PostgreSQL is installed we can create our db and tables with following bash script
+```
 sudo apt-get install jq(for setup.sh)
 ./setup.sh
-
+```
+After this when communicating with UI the inputed dates will be inserted in db
