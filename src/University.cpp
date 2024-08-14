@@ -64,16 +64,13 @@ University University::loadState(University &university, const std::string &file
     file.close();
 
     for (const auto& courseJson : j["courses"]) {
-        std::string courseJsonString = courseJson.dump();
-        university.addCourse(Course::reverseFromJson(courseJsonString));
+        university.addCourse(Course::reverseFromJson(courseJson));
     }
     for (const auto& instructorJson : j["instructors"]) {
-        std::string instructorJsonString = instructorJson.dump();
-        university.addInstructor(Instructor::reverseFromJson(instructorJsonString));
+        university.addInstructor(Instructor::reverseFromJson(instructorJson));
     }
     for (const auto& timeSlotJson : j["timeSlots"]) {
-        std::string timeSlotJsonString = timeSlotJson.dump();
-        university.addTimeSlot(TimeSlot::reverseFromJson(timeSlotJsonString));
+        university.addTimeSlot(TimeSlot::reverseFromJson(timeSlotJson));
     }
 
     return university;

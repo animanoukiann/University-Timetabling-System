@@ -34,11 +34,10 @@ std::string TimeSlot::convertToJson() {
     return j.dump(4);
 }
 
-TimeSlot TimeSlot::reverseFromJson(std::string &jsonString) {
-    json j = json::parse(jsonString);
+TimeSlot TimeSlot::reverseFromJson(const nlohmann::json &j) {
     std::string day = j["day"];
-    std::string startTime = j["startTime"];
-    std::string endTime = j["endTime"]; 
+    std::string startTime = j["start_time"];
+    std::string endTime = j["end_time"]; 
 
     return TimeSlot(day, startTime, endTime);
 }

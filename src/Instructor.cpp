@@ -54,20 +54,16 @@ std::string Instructor::convertToJson() {
     return j.dump(4);
 }
 
-Instructor Instructor::reverseFromJson(std::string &jsonString) {
-    json j = json::parse(jsonString);
+Instructor Instructor::reverseFromJson(const nlohmann::json &j) {
     
-    std::string name = j["name"];
-    std::vector<TimeSlot> availability;
+    std::string name = j["instructor_name"];
     std::vector<Course> preferredCourses;
-    for (auto& tsJson : j["availability"]) {
-        std::string tsJsonString = tsJson.dump();
-        availability.push_back(TimeSlot::reverseFromJson(tsJsonString));
-    }
-    for (auto& course : j["preferredCourses"]) {
-        std::string courseString = course.dump();
-        preferredCourses.push_back(Course::reverseFromJson(courseString));
-    }
-    
-    return Instructor(name, availability, preferredCourses);
+    std::string day = j["inst_day"];
+    std::string start_time = j["inst_start_time"];
+    std::string end_time = j["inst_end_time"];
+    std::vector<TimeSlot> preferredTimeSlots;
+    preferredTimeSlots.push_back(TimeSlot(day, start_time, end_time));
+    std::string course_name = j["inst_course_name"];
+    preferredCourses.push_back(Course(course_name));
+    return Instructor(name, preferredTimeSlots, preferredCourses);
 }

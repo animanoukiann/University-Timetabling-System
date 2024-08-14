@@ -21,7 +21,8 @@ public:
     std::string getEndTime() const;
     bool operator==(const TimeSlot& other) const;
     std::string convertToJson();
-    static TimeSlot reverseFromJson(std::string &jsonString);
+    static TimeSlot reverseFromJson(const nlohmann::json &jsonString);
+    // static TimeSlot reverseFromJson(std::string &jsonString);
 };
 
 #endif

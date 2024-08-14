@@ -40,15 +40,14 @@ bool Course::operator==(const Course& other) const {
     return courseName == other.courseName && preferredTimeSlots == other.preferredTimeSlots;
 }
 
-Course Course::reverseFromJson(std::string &jsonString) {
-    json j = json::parse(jsonString);
+Course Course::reverseFromJson(const nlohmann::json &j) {
+    // json j = json::parse(courseJson);
     
-    std::string courseName = j["courseName"];
+    std::string courseName = j["course_name"];
+    std::string day = j["course_day"];
+    std::string start_time = j["course_start_time"];
+    std::string end_time = j["course_end_time"];
     std::vector<TimeSlot> preferredTimeSlots;
-    for (auto& tsJson : j["preferredTimeSlots"]) {
-        std::string tsJsonString = tsJson.dump();
-        preferredTimeSlots.push_back(TimeSlot::reverseFromJson(tsJsonString));
-    }
-    
+    preferredTimeSlots.push_back(TimeSlot(day, start_time, end_time));
     return Course(courseName, preferredTimeSlots);
 }

@@ -79,3 +79,24 @@ npm run serve
 ```
 
 Now if you open your browser and follow this link http://127.0.0.1:8080/ you will see all options mentioned above(addCourse, addInstructor, addTimeslot, schedule) and after inputing some data into one of them, you can see result.json file updated and filled with the new inputed data
+
+chmod +x ./install.sh
+chmod +x ./setup.sh 
+sudo ./install.sh
+
+after running install.sh we need to do some changes
+cd /etc/postgresql/14/main
+sudo vim pg_hba.conf
+change this "local   all             postgres                                peer"
+to          "local   all             postgres                                md5"
+save it and then reload PostgreSQL to apply changes
+sudo systemctl reload postgresql
+sudo -i -u postgres psql
+psql
+ALTER USER postgres PASSWORD 'pwd123';
+\q
+exit
+
+sudo apt-get install jq(for setup.sh)
+./setup.sh
+

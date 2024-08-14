@@ -55,7 +55,7 @@ def insert_course(name, day=None, start_time=None, end_time=None):
             cursor.execute(query_only_by_name, (name,))
         else:
             query_provided_with_time = """
-                INSERT INTO course (course_name, day, start_time, end_time) 
+                INSERT INTO course (course_name, course_day, course_start_time, course_end_time) 
                 VALUES (%s, %s, %s, %s)
             """
             print(f"Executing SQL: {query_provided_with_time} with values: {name}, {day}, {start_time}, {end_time}")
@@ -82,21 +82,21 @@ def insert_instructor(instructor_name, course_name=None, day=None, start_time=No
         if day==None and start_time==None and end_time==None:
             if course_name==None:
                 query_by_instructor_name = """
-                    INSERT INTO instructor (name)
+                    INSERT INTO instructor (instructor_name)
                     VALUES (%s) 
                 """
                 print(f"Executing SQL: {query_by_instructor_name} with value: {instructor_name}")
                 cursor.execute(query_by_instructor_name, (instructor_name,))
             else:
                 query_by_instructor_name_and_course = """
-                    INSERT INTO instructor (name, course_name)
+                    INSERT INTO instructor (instructor_name, inst_course_name)
                     VALUES (%s, %s)
                 """
                 print(f"Executing SQL: {query_by_instructor_name_and_course} with value: {instructor_name}, {course_name}")
                 cursor.execute(query_by_instructor_name_and_course, (instructor_name, course_name))
         else:
             query_by_instructor_course_timeslot = """
-                INSERT INTO instructor (name, course_name, day, start_time, end_time)
+                INSERT INTO instructor (instructor_name, inst_course_name, inst_day, inst_start_time, inst_end_time)
                 VALUES (%s, %s, %s, %s, %s)
             """
             print(f"Executing SQL: {query_by_instructor_course_timeslot} with value: {instructor_name}, {course_name}, {day}, {start_time}, {end_time}")
