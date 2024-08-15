@@ -1,4 +1,4 @@
-class UniJsonKeys:
+class UniKeys:
     COURSE_NAME = 'courseName'
     TIME_SLOT_COURSE = 'timeSlotCourse'
     TIME_SLOT = 'timeSlot'

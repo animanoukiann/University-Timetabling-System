@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from constants import UniJsonKeys
+from constants import UniKeys
 import subprocess
 import requests
 import os
@@ -11,8 +11,8 @@ CORS(app)
 @app.route('/addCourse', methods=['POST'])
 def add_course():
     data = request.json
-    course_name = data.get(UniJsonKeys.COURSE_NAME, '')
-    time_slot = data.get(UniJsonKeys.TIME_SLOT_COURSE, '')
+    course_name = data.get(UniKeys.COURSE_NAME, '')
+    time_slot = data.get(UniKeys.TIME_SLOT_COURSE, '')
     if not course_name:
         return jsonify({'success': False, 'message': 'Course name is required'}), requests.codes.bad_request
     
@@ -20,9 +20,9 @@ def add_course():
     grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
     command_args = [cpp_exec_path, '--addCourse', course_name]
+    if time_slot:
+        command_args.append(time_slot)
     try:
-        if time_slot:
-            command_args.append(time_slot)
         result = subprocess.run(command_args)
         if result.returncode != 0:
             return jsonify({'success': False, 'message': 'Failed to add course', 'details': result.stderr}), requests.codes.internal_server_error
@@ -35,7 +35,7 @@ def add_course():
 @app.route('/addTimeslot', methods=['POST'])
 def add_time_slot():
     data = request.json
-    ts = data.get(UniJsonKeys.TIME_SLOT, '')
+    ts = data.get(UniKeys.TIME_SLOT, '')
 
     if not ts:
         return jsonify({'success': False, 'message': 'Time slot is required'}), requests.codes.bad_request
@@ -55,9 +55,9 @@ def add_time_slot():
 @app.route('/addInstructor', methods=['POST'])
 def add_instructor():
     data = request.json
-    inst = data.get(UniJsonKeys.INSTRUCTOR, '')
-    course = data.get(UniJsonKeys.COURSE_NAME_INST, '')
-    time  = data.get(UniJsonKeys.TIME_SLOT_INST, '')
+    inst = data.get(UniKeys.INSTRUCTOR, '')
+    course = data.get(UniKeys.COURSE_NAME_INST, '')
+    time  = data.get(UniKeys.TIME_SLOT_INST, '')
 
     if not inst:
         return jsonify({'success': False, 'message': 'Instructor is required'}), requests.codes.bad_request
@@ -66,13 +66,13 @@ def add_instructor():
     grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
     command_args = [cpp_exec_path, '--addInstructor', inst]
+    if course:
+        command_args.append(course)
+    if not course and time:
+        return jsonify({'success': False, 'message': 'If time is inputed course is mandatory'}), requests.codes.bad_request
+    if time:
+        command_args.append(time)
     try:
-        if course:
-            command_args.append(course)
-        if not course and time:
-            return jsonify({'success': False, 'message': 'If time is inputed course is mandatory'}), requests.codes.bad_request
-        if time:
-            command_args.append(time)
         result = subprocess.run(command_args)
         if result.returncode != 0:
             return jsonify({'success': False, 'message': 'Failed to add instructor', 'details': result.stderr}), requests.codes.internal_server_error
@@ -86,7 +86,6 @@ def schedule():
     app_dir = os.path.dirname(os.path.abspath(__file__))
     grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
-
     try:
         result = subprocess.run([cpp_exec_path, '--schedule'])
         if result.returncode != 0:
