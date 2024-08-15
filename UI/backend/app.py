@@ -87,7 +87,7 @@ def schedule():
     grand_parent_dir = os.path.dirname(os.path.dirname(app_dir))
     cpp_exec_path = os.path.join(grand_parent_dir, 'run.sh')
     try:
-        result = subprocess.run([cpp_exec_path, '--schedule'])
+        result = subprocess.run([cpp_exec_path, '--schedule'], capture_output=True, text=True)
         if result.returncode != 0:
             return jsonify({'success': False, 'message': 'Failed to execute algorithm', 'details': result.stderr}), requests.codes.internal_server_error
         return jsonify({'success': True, 'message': 'Algorithm executed successfully!', 'output': result.stdout})
