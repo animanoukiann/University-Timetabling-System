@@ -55,7 +55,6 @@ std::string Instructor::convertToJson() {
 }
 
 Instructor Instructor::reverseFromJson(const nlohmann::json &j) {
-    
     std::string name = j["instructor_name"];
     std::vector<Course> preferredCourses;
     std::string day = j["inst_day"];

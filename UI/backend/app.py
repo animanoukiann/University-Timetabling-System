@@ -4,7 +4,8 @@ from constants import UniJsonKeys
 from db_utils import connect_to_db, insert_time_slot, insert_course, insert_instructor
 import requests
 import json
-import fileinput
+import pyuniversity
+
 
 app = Flask(__name__)
 CORS(app)
@@ -108,9 +109,15 @@ def schedule():
     filedata = filedata.replace(fileToSearch, fileToReplace)
     with open('output.json', 'w') as file:
         file.write(filedata)
+
+    with open('output.json', 'r') as file:
+        json_data = json.load(file)
+    json_string = json.dumps(json_data)
+    uni = pyuniversity.University()
+    result = uni.schedule(json_string)
     cur.close()
     conn.close()
-    return jsonify({'success': True, 'message': 'Json uploaded successfully!'})
+    return jsonify({'success': True, 'message': 'Schedule generated successfully!', 'result': result})
 
 
 if __name__ == '__main__':

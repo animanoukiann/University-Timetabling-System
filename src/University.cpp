@@ -12,68 +12,18 @@ void University::addTimeSlot(TimeSlot time) {
     timeSlots.push_back(time);
 }
 
-void University::saveState(University &university, const std::string &file_name) {
-    json j;
+void University::loadState(const std::string &jsonString) {
+    nlohmann::json json_obj = nlohmann::json::parse(jsonString);
 
-    std::ifstream file_in(file_name);
-    if (file_in.is_open()) {
-        try {
-            file_in >> j;
-        }
-        catch (const std::exception& e) {
-            std::cerr << "Error reading existing data: " << e.what() << std::endl;
-        }
-        file_in.close();
+    for (const auto& courseJson : json_obj["courses"]) {
+        addCourse(Course::reverseFromJson(courseJson));
     }
-    json coursesJson = json::array();
-    for (auto& course : university.courses) {
-        coursesJson.push_back(json::parse(course.convertToJson()));
+    for (const auto& instructorJson : json_obj["instructors"]) {
+        addInstructor(Instructor::reverseFromJson(instructorJson));
     }
-    j["courses"].insert(j["courses"].end(), coursesJson.begin(), coursesJson.end());
-
-    json instructorsJson = json::array();
-    for (auto& instructor : university.instructors) {
-        instructorsJson.push_back(json::parse(instructor.convertToJson()));
+    for (const auto& timeSlotJson : json_obj["timeSlots"]) {
+        addTimeSlot(TimeSlot::reverseFromJson(timeSlotJson));
     }
-    j["instructors"].insert(j["instructors"].end(), instructorsJson.begin(), instructorsJson.end());
-
-    json timeSlotsJson = json::array();
-    for (auto& timeSlot : university.timeSlots) {
-        timeSlotsJson.push_back(json::parse(timeSlot.convertToJson()));
-    }
-    j["timeSlots"].insert(j["timeSlots"].end(), timeSlotsJson.begin(), timeSlotsJson.end());
-
-    std::ofstream file(file_name);
-    if (!file) {
-        std::cerr << "Error while opening file: " << file_name << std::endl;
-        return;
-    }
-    file << j.dump(4);
-    file.close();
-}
-
-University University::loadState(University &university, const std::string &file_name) {
-    std::ifstream file(file_name);
-    if (!file) {
-        std::cerr << "Error while opening file: " << file_name << std::endl;
-        return university;
-    }
-
-    json j;
-    file >> j;
-    file.close();
-
-    for (const auto& courseJson : j["courses"]) {
-        university.addCourse(Course::reverseFromJson(courseJson));
-    }
-    for (const auto& instructorJson : j["instructors"]) {
-        university.addInstructor(Instructor::reverseFromJson(instructorJson));
-    }
-    for (const auto& timeSlotJson : j["timeSlots"]) {
-        university.addTimeSlot(TimeSlot::reverseFromJson(timeSlotJson));
-    }
-
-    return university;
 }
 
 University::Chromosome University::createRandomChromosome() {
@@ -172,8 +122,6 @@ double University::evaluateFitness(const Chromosome& chromosome) {
     return fitness;
 }
 
-//this function mixes course assignments genes between two candidate solutions 
-//chromosomes to potentially create better solutions
 void University::crossover(Chromosome& offspring1, Chromosome& offspring2) {
     if (offspring1.genes.empty() || offspring2.genes.empty()) {
         std::cerr << "Error: Empty genes vector in crossover." << std::endl;
@@ -271,7 +219,24 @@ University::Chromosome University::geneticAlgorithm() {
     return *bestChromosome;
 }
 
-std::vector<University::Gene> University::schedule() {
+std::string University::schedule(std::string jsonString) {
+    loadState(jsonString);
     Chromosome bestChromosome = geneticAlgorithm();
-    return bestChromosome.genes;
+    std::vector<University::Gene> schedule = bestChromosome.genes;
+    std::string algorithmResult;
+    algorithmResult.append("Best Schedule:\n");
+    for (const auto& gene : schedule) {
+        algorithmResult.append("Course: ");
+        algorithmResult.append(courses[gene.courseIndex].getCourseName());
+        algorithmResult.append(", TimeSlot: ");
+        algorithmResult.append(timeSlots[gene.timeSlotIndex].getDay());
+        algorithmResult.append(" ");
+        algorithmResult.append(timeSlots[gene.timeSlotIndex].getStartTime());
+        algorithmResult.append("-");
+        algorithmResult.append(timeSlots[gene.timeSlotIndex].getEndTime());
+        algorithmResult.append(", Instructor: " );
+        algorithmResult.append(instructors[gene.instructorIndex].getName());
+        algorithmResult.append("\n");
+    }
+    return algorithmResult;
 }

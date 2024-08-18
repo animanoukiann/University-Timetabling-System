@@ -88,7 +88,7 @@ export default {
         const response = await axios.get('http://localhost:5000/schedule');
         if (response.data.success) {
           this.responseMessage = response.data.message;
-          this.responseOutput = response.data.output;
+          this.responseOutput = response.data.result;
         } else {
           this.responseMessage = response.data.message;
         }

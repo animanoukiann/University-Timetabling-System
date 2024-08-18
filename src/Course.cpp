@@ -41,8 +41,6 @@ bool Course::operator==(const Course& other) const {
 }
 
 Course Course::reverseFromJson(const nlohmann::json &j) {
-    // json j = json::parse(courseJson);
-    
     std::string courseName = j["course_name"];
     std::string day = j["course_day"];
     std::string start_time = j["course_start_time"];
