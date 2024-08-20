@@ -25,7 +25,6 @@ make install
 
 After installing, the dynamic library (libUniversityTimetabling.so) and the executable (main) will be placed in the root directory of the project. To run the project, use the this command from root directory, with which you can add following arguments
 ```
-chmod +x ./run.sh
 /run.sh
 ```
 
@@ -82,8 +81,6 @@ Now if you open your browser and follow this link http://127.0.0.1:8080/ you wil
 
 Next we will create a database (PostgreSQL) for which we need to install it with following commands
 ``` 
-chmod +x ./install.sh
-chmod +x ./setup.sh 
 sudo ./install.sh
 ```
 
@@ -114,3 +111,7 @@ sudo apt-get install jq(for setup.sh)
 ./setup.sh
 ```
 After this when communicating with UI the inputed dates will be inserted in db
+```
+./connect_db.sh
+```
+So after sending you can check is it added or no by running queries
