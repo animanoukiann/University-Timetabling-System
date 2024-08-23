@@ -18,9 +18,7 @@ public:
     void displayInfo() const;
     void setAvailability(TimeSlot &timeSlot);
     void setPreferredCourses(Course &course);
-    std::string convertToJson();
     static Instructor reverseFromJson(const nlohmann::json &jsonString);
-    // static Instructor reverseFromJson(std::string &jsonString);
 };
 
 #endif

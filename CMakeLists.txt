@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/third_party/argparse)
 include_directories(${CMAKE_SOURCE_DIR}/third_party/nlohmann/include)
+include_directories(${CMAKE_SOURCE_DIR}/third_party/pybind11/include)
 
 # Source files for the library
 set(SRC ${CMAKE_SOURCE_DIR}/src/Course.cpp
