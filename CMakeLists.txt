@@ -28,11 +28,13 @@ set_target_properties(UniversityTimetable PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${
 # Install rules
 install(TARGETS UniversityTimetable LIBRARY DESTINATION ${CMAKE_SOURCE_DIR})
 
-find_package(pybind11 REQUIRED)
+# find_package(pybind11 REQUIRED)
 
 # Add Pybind11 bindings file
 set(PYBIND_SOURCES ${CMAKE_SOURCE_DIR}/src/UniBindings.cpp)
 
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/third_party/pybind11)
 # Create the Python module
 pybind11_add_module(pyuniversity ${PYBIND_SOURCES})
 
