@@ -16,8 +16,7 @@ public:
     std::string getCourseName() const;
     std::vector<TimeSlot> getPreferredTimeSlots() const;
     void setPreferredTimeSlot(TimeSlot &timeSlot);
-    std::string convertToJson();
-    static Course reverseFromJson(std::string &jsonString);
+    static Course reverseFromJson(const nlohmann::json &courseJson);
 };
 
 #endif

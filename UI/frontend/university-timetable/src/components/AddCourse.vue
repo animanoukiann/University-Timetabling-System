@@ -88,7 +88,7 @@ export default {
         const response = await axios.get('http://localhost:5000/schedule');
         if (response.data.success) {
           this.responseMessage = response.data.message;
-          this.responseOutput = response.data.output;
+          this.responseOutput = response.data.result;
         } else {
           this.responseMessage = response.data.message;
         }
@@ -139,7 +139,7 @@ export default {
 }
 
 .add-button {
-  background-color: #2945b8; /* Calm blue color */
+  background-color: #2945b8;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -148,7 +148,7 @@ export default {
 }
 
 .add-button:hover {
-  background-color: #0d00ff; /* Darker blue on hover */
+  background-color: #0d00ff;
 }
 
 </style>

@@ -33,9 +33,8 @@ public:
     void addCourse(Course courseName);
     void addInstructor(Instructor name);
     void addTimeSlot(TimeSlot time);
-    void saveState(University &university, const std::string &file);
-    University loadState(University &university, const std::string &file);
-    std::vector<Gene> schedule();
+    void loadState(const std::string &file);
+    std::string schedule(const std::string jsonString);
 
     Chromosome createRandomChromosome();
     bool validateGeneIndices(const Gene& gene);
