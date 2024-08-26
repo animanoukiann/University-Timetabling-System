@@ -4,8 +4,9 @@ import pyuniversity
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from constants import UniJsonKeys
-from dbUtils import connectDB, insertTimeSlot, insertCourse, insertInstructor
-
+from constants import jsonFieldKeys
+from dbUtils import insertTimeSlot, insertCourse, insertInstructor
+from dbUtils import connection
 
 app = Flask(__name__)
 CORS(app)
@@ -93,8 +94,7 @@ def replaceNoneWithEmptyString(d):
 
 @app.route('/schedule', methods=['GET'])
 def schedule():
-    conn = connectDB()
-    cur = conn.cursor()
+    cur = connection.cursor()
     courseFieldName = "courses"
     instructorFieldName = "instructors"
     timeSlotFieldName = "timeSlots"
@@ -113,16 +113,15 @@ def schedule():
     except Exception as error:
         print("Error runing a query to create a json", error)
     combinedResult = {
-        "courses": coursesResult[courseFieldName],
-        "instructors": instructorsResult[instructorFieldName],
-        "timeSlots": timeSlotResult[timeSlotFieldName]
+        jsonFieldKeys.course : coursesResult[courseFieldName],
+        jsonFieldKeys.instructor : instructorsResult[instructorFieldName],
+        jsonFieldKeys.timeSlot : timeSlotResult[timeSlotFieldName]
     }
     combinedResult = replaceNoneWithEmptyString(combinedResult)
     x = json.dumps(combinedResult)
     uni = pyuniversity.University()
     result = uni.schedule(x)
     cur.close()
-    conn.close()
     return jsonify({'success': True, 'message': 'Schedule generated successfully!',
                     'result': result})
 

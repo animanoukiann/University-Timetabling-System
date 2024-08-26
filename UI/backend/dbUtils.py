@@ -2,6 +2,7 @@ import psycopg2
 import traceback
 import json
 import os
+from constants import ConnectParametrs
 
 def connectDB():
     appDir = os.path.dirname(os.path.abspath(__file__))
@@ -11,10 +12,10 @@ def connectDB():
       data = json.load(jsonFile)
     try:
         connection = psycopg2.connect(
-            host= data['host'],
-            database= data['dbname'],
-            user= data['user'],
-            password= data['password']
+            host= data[ConnectParametrs.host],
+            database= data[ConnectParametrs.db],
+            user= data[ConnectParametrs.user],
+            password= data[ConnectParametrs.password]
         )
         return connection
     except Exception as error:
