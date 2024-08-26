@@ -34,9 +34,9 @@ For this argument you can give one, two or three argumets respectively name of t
 
 Ex. 
 ```
-/run.sh --addInstructor "John B" "Intro to ML" "Monday 12:50 14:25"
-/run.sh --addInstructor "John B"
-/run.sh --addInstructor "John B" "Intro to ML"
+./run.sh --addInstructor "John B" "Intro to ML" "Monday 12:50 14:25"
+./run.sh --addInstructor "John B"
+./run.sh --addInstructor "John B" "Intro to ML"
 ```
 --addCourse
 
@@ -44,8 +44,8 @@ For this argument you can give one or two parametrs respectively name of the cou
 
 Ex. 
 ```
-/run.sh --addCourse "Intro to ML" "Monday 12:50 14:25"
-/run.sh --addCourse "Intro to ML"
+./run.sh --addCourse "Intro to ML" "Monday 12:50 14:25"
+./run.sh --addCourse "Intro to ML"
 ```
 
 --addTimeslot
@@ -54,7 +54,7 @@ For this argument you need to give only one argument, seperated by space respect
 
 Ex. 
 ```
-/run.sh --addTimeslot "Monday 12:50 14:25"
+./run.sh --addTimeslot "Monday 12:50 14:25"
 ```
 
 --schedule
