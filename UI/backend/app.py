@@ -1,5 +1,6 @@
 import requests
 import json
+import psycopg2
 import pyuniversity
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -11,7 +12,7 @@ from dbUtils import connection
 app = Flask(__name__)
 CORS(app)
 
-def tsProvided(timeSlot, insertFuncArgs):
+def tsProvided(timeSlot, insertFuncArgs=None):
     tsMembers = timeSlot.split()
     if len(tsMembers) != 3:
         return jsonify({'success': False, 'message': 'Invalid time slot format'}), \
@@ -111,7 +112,8 @@ def schedule():
                     "(SELECT day, start_time, end_time FROM time_slot) t")
         timeSlotResult = cur.fetchone()[0]
     except Exception as error:
-        print("Error runing a query to create a json", error)
+        return jsonify({'success': False, 'message': str(error)}), \
+            requests.codes.internal_server_error
     combinedResult = {
         jsonFieldKeys.course : coursesResult[courseFieldName],
         jsonFieldKeys.instructor : instructorsResult[instructorFieldName],
