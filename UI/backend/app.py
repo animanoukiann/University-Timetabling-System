@@ -15,11 +15,11 @@ CORS(app)
 def tsProvided(timeSlot, insertFuncArgs=None):
     tsMembers = timeSlot.split()
     if len(tsMembers) != 3:
-        return jsonify({'success': False, 'message': 'Invalid time slot format'}), \
-            requests.codes.bad_request
+        return False
     day, startTime, endTime = tsMembers
     insertFuncArgs.extend([day, startTime, endTime])
     insertTimeSlot(day, startTime, endTime)
+    return True
 
 @app.route('/addCourse', methods=['POST'])
 def add_course():
@@ -31,7 +31,10 @@ def add_course():
             requests.codes.bad_request
     insertFuncArgs = [courseName]
     if timeSlot:
-        tsProvided(timeSlot, insertFuncArgs)
+        success = tsProvided(timeSlot, insertFuncArgs)
+        if not success:
+            return jsonify({'success': False, 'message': 'Invalid time slot format'}), \
+                requests.codes.bad_request
     try:
         insertCourse(*insertFuncArgs)
         return jsonify({'success': True, 'message': 'Course added successfully!'})
@@ -77,7 +80,10 @@ def add_instructor():
         return jsonify({'success': False, 'message': 'If time is inputed course is mandatory'}), \
             requests.codes.bad_request
     if time:
-        tsProvided(time, insertFuncArgs)
+        success = tsProvided(time, insertFuncArgs)
+        if not success:
+            return jsonify({'success': False, 'message': 'Invalid time slot format'}), \
+                requests.codes.bad_request
     try:
         insertInstructor(*insertFuncArgs)
         return jsonify({'success': True, 'message': 'Instructor added successfully!'})

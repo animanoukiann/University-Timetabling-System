@@ -117,7 +117,11 @@ After this when communicating with UI the inputed dates will be inserted in db
 So after sending you can check is it added or no by running queries
 
 Next we need to test our project, so in University-Timetabling-System/UI/backend you can see two testings, unitTest and integrationTest which are for individual units and the interaction between integrated components respectively.
-First to run unitTest.py make sure that you build the project and setup the db by this script ''./setup.sh', then to test it just run this command
+First to run tests make sure that you build the project and setup the db by this script ''./setup.sh', then test unitTest.py by just running following command
 ```
 python3 unitTest.py
+```
+And for integration_test.py you just need to run this command
+```
+pytest
 ```
