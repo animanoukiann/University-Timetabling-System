@@ -42,6 +42,9 @@ def insertTimeSlot(day, startTime, endTime):
         print(f"Exception: {str(e)}")
         traceback.print_exc()
         raise e
+    finally:
+        if cursor:
+            cursor.close()
 
 def insertCourse(name, day=None, startTime=None, endTime=None):
     try:
@@ -70,6 +73,9 @@ def insertCourse(name, day=None, startTime=None, endTime=None):
         print(f"Exception: {str(e)}")
         traceback.print_exc()
         raise e
+    finally:
+        if cursor:
+            cursor.close()
 
 def insertInstructor(instructorName, courseName=None, day=None, startTime=None, endTime=None):
     try:
@@ -108,3 +114,6 @@ def insertInstructor(instructorName, courseName=None, day=None, startTime=None, 
         print(f"Exception: {str(e)}")
         traceback.print_exc()
         raise e
+    finally:
+        if cursor:
+            cursor.close()
