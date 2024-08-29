@@ -1,5 +1,6 @@
 import requests
 import json
+import psycopg2
 import pyuniversity
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -11,14 +12,14 @@ from dbUtils import connection
 app = Flask(__name__)
 CORS(app)
 
-def tsProvided(timeSlot, insertFuncArgs):
+def tsProvided(timeSlot, insertFuncArgs=None):
     tsMembers = timeSlot.split()
     if len(tsMembers) != 3:
-        return jsonify({'success': False, 'message': 'Invalid time slot format'}), \
-            requests.codes.bad_request
+        return False
     day, startTime, endTime = tsMembers
     insertFuncArgs.extend([day, startTime, endTime])
     insertTimeSlot(day, startTime, endTime)
+    return True
 
 @app.route('/addCourse', methods=['POST'])
 def add_course():
@@ -30,7 +31,10 @@ def add_course():
             requests.codes.bad_request
     insertFuncArgs = [courseName]
     if timeSlot:
-        tsProvided(timeSlot, insertFuncArgs)
+        success = tsProvided(timeSlot, insertFuncArgs)
+        if not success:
+            return jsonify({'success': False, 'message': 'Invalid time slot format'}), \
+                requests.codes.bad_request
     try:
         insertCourse(*insertFuncArgs)
         return jsonify({'success': True, 'message': 'Course added successfully!'})
@@ -76,7 +80,10 @@ def add_instructor():
         return jsonify({'success': False, 'message': 'If time is inputed course is mandatory'}), \
             requests.codes.bad_request
     if time:
-        tsProvided(time, insertFuncArgs)
+        success = tsProvided(time, insertFuncArgs)
+        if not success:
+            return jsonify({'success': False, 'message': 'Invalid time slot format'}), \
+                requests.codes.bad_request
     try:
         insertInstructor(*insertFuncArgs)
         return jsonify({'success': True, 'message': 'Instructor added successfully!'})
@@ -111,7 +118,8 @@ def schedule():
                     "(SELECT day, start_time, end_time FROM time_slot) t")
         timeSlotResult = cur.fetchone()[0]
     except Exception as error:
-        print("Error runing a query to create a json", error)
+        return jsonify({'success': False, 'message': str(error)}), \
+            requests.codes.internal_server_error
     combinedResult = {
         jsonFieldKeys.course : coursesResult[courseFieldName],
         jsonFieldKeys.instructor : instructorsResult[instructorFieldName],
